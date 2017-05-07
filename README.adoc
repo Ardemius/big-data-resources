@@ -1,0 +1,205 @@
+= Big Data 2017 overview
+Thomas SCHWENDER <https://github.com/ardemius[@ardemius]>
+:icons: font
+:source-highlighter: highlightjs
+:lb: pass:[<br> +]
+:sb: pass:[<br>]
+// check https://github.com/Ardemius/personal-wiki/wiki/AsciiDoctor-tips for tips on table of content in GitHub
+:toc: macro
+
+toc::[]
+
+== Constat sur la mise en place du Big Data en 2017
+
+Début 2017, le Big Data semble encore réservé aux seules grandes entreprises, les autres n'arrivant pas à franchir une série d'obstacles dont les suivants :
+
+* coût matériel et logiciel
+* coût d'acquisation des données
+* manque de compétences (problématique de recrutement)
+* manque de visualisation des opportunités. +
+La conséquence d'un manque d'expertise, ce qui revient au point précédent.
+* le ROI des investissements Big Data n'a pas été estimé (ils n'ont pas été pondérés par les gains attendus)
+* la collecte de données est limitée aux canaux traditionnels.
+* les données sont non structurées (et on ne sait pas les traiter)
+
+On en conclut que l'*exploitation de la data* a un coût de mise en place engendrant une *dette initiale*. +
+Il est donc important de *commencer par de petits projets*, afin de limiter les investissements et de valider la solution, avant de penser à la généraliser à tout le SI. +
+Dans le même esprit, il est important de choisir une *architecture évolutive*, que l'on adaptera aux nouveaux besoins, plutôt qu'une architecture complexe dès le départ.
+
+== 3 grandes types de traitement des données
+
+* Batch
+* Micro-batch
+* Temps réel (*streaming*)
+
+=== Batch
+
+Les traitements vont analyser l’ensemble des données disponibles à un instant T.
+
+* *Données en entrée* : 
+	** fichiers
+	** résultat d’une requête (HDFS, Sqoop, etc.). +
+http://sqoop.apache.org/[Apache Sqoop] :
+____
+System for bulk data transfer between HDFS and structured datastores as RDBMS. Like Flume but from HDFS to RDBMS.
+____
+* *Résultats* : les résultats ne seront disponibles qu’à la fin des traitements.
+* *Latence* : souvent de [red]*l’ordre de la minute, voire dans certains cas de l’heure*.
+
+==== Exemples d’implémentation
+
+* *MapReduce*
+
+=== Micro-batch
+
+Les traitements vont analyser l’ensemble des données disponibles toutes les n secondes.
+
+* *Données en entrée* : 
+	** petits fichiers
+	** données Web
+	** etc.
+* *Résultats* : les résultats ne seront disponibles qu’à la fin des traitements d’un micro-batch.
+* *Latence* : souvent de [red]*l’ordre de la seconde*.
+
+==== Exemples d’implémentation
+
+* *Spark streaming*
+
+=== (quasi) Temps réel
+
+Les traitements vont analyser les données au fur et à mesure de leur disponibilité.
+
+* *Données en entrée* : 
+	** stream Web
+	** messages provenant d’un bus
+	** flux de logs
+	** etc.
+* *Résultats* : les résultats sont disponibles au fur et à mesure.
+* *Latence* : parfois [red]*inférieur à la seconde*.
+
+==== Exemples d’implémentation
+
+* *Flink*
++
+____
+*Apache Flink* (formerly called Stratosphere) features powerful programming abstractions in Java and Scala, a high-performance runtime, and automatic program optimization. It has *native support for iterations, incremental iterations, and programs consisting of large DAGs of operations*. +
+Flink is a *data processing system* and an *alternative to Hadoop's MapReduce* component. *It comes with its own runtime, rather than building on top of MapReduce*. As such, it *can work completely independently of the Hadoop ecosystem*. +
+However, Flink can also access Hadoop's distributed file system (HDFS) to read and write data, and Hadoop's next-generation resource manager (YARN footnoteref:[YARN, 
+	YARN stands for _"Yet-Another-Resource-Negotiator"_. It is a new framework that facilitates *writing arbitrary distributed processing frameworks and applications*. 
+	{sb}
+	YARN’s execution model is more generic than the earlier MapReduce implementation. YARN can run applications that do not follow the MapReduce model, unlike the original Apache Hadoop MapReduce (also called MR1). 
+	{sb}
+	Hadoop YARN is an attempt to take Apache Hadoop beyond MapReduce for data-processing.]
+) to provision cluster resources. Since most Flink users are using Hadoop HDFS to store their data, it ships already the required libraries to access HDFS.
+____
++
+Voir :
++
+	** mon résumé de https://github.com/Ardemius/devoxx-france-2017-presentation/blob/master/jeudi/jeudi_1610-1655_Stream-Processing-avec-Apache-Flink.adoc[Stream Processing avec Apache Flink] (Devoxx France 2017, Tugdual Grall)
+	** http://flink.incubator.apache.org/[Apache Flink incubator page]
+	** http://stratosphere.eu/[Stratosphere site]
++
+{lb}
+* *Tez* 
++
+____
+*Tez* is a proposal to develop a generic application which can be used to *process complex data-processing task DAGs* and *runs natively on Apache Hadoop YARN*. +
+Tez generalizes the MapReduce paradigm to a more powerful framework based on *expressing computations as a dataflow graph*. +
+Tez is not meant directly for end-users – in fact it enables developers to build end-user applications with much better performance and flexibility. +
+Hadoop has traditionally been a batch-processing platform for large amounts of data. However, there are a lot of use cases for *near-real-time performance* of query processing. There are also several workloads, such as Machine Learning, which do not fit will into the MapReduce paradigm. Tez helps Hadoop address these use cases. +
+Tez framework constitutes part of Stinger initiative (a low latency based SQL type query interface for Hadoop based on Hive).
+____
++
+Voir :
++
+	** http://incubator.apache.org/projects/tez.html[Apache Tez Incubator]
+	** http://hortonworks.com/hadoop/tez/[*Hortonworks* Apache Tez]
++
+{lb}
+* *Storm*
++
+____
+*Storm* is a *complex event processor* (CEP) and *distributed computation framework* written predominantly in the Clojure programming language. +
+It is a distributed *real-time computation system for processing fast, large streams of data*. +
+Storm is an architecture *based on master-workers paradigma*. So a Storm cluster mainly consists of a master and worker nodes, with *coordination done by Zookeeper*. +
+Storm *makes use of zeromq* (0mq, zeromq), an advanced, embeddable networking library. It provides a message queue, but unlike message-oriented middleware (MOM), *a 0MQ system can run without a dedicated message broker*. The library is designed to have a familiar socket-style API. +
+Originally created by Nathan Marz and team at BackType, the project was open sourced after being acquired by Twitter. Storm was initially developed and deployed at BackType in 2011. After 7 months of development BackType was acquired by Twitter in July 2011. Storm was open sourced in September 2011.
+
+*Hortonworks is developing a Storm-on-YARN version* and plans finish the base-level integration in 2013 Q4. This is the plan from Hortonworks. Yahoo/Hortonworks also plans to move Storm-on-YARN code from github.com/yahoo/storm-yarn to be a subproject of Apache Storm project in the near future.
+
+Twitter has recently released a Hadoop-Storm Hybrid called _"Summingbird"_. Summingbird fuses the two frameworks into one, allowing for developers to use Storm for short-term processing and Hadoop for deep data dives, *a system that aims to mitigate the tradeoffs between batch processing and stream processing* by combining them into a hybrid system.
+____
++
+NOTE: Personnellement, j'ai souvent eu de *très mauvais échos* sur l'utilisation de Storm (références à retrouver) 
++
+Voir :
++
+	** http://storm-project.net/[Storm project]
+	** https://hadoopecosystemtable.github.io/github.com/yahoo/storm-yarn[Storm-on-Yarn]
+
+== Catégories des composants du Big Data
+
+* Ingestion/Extraction de données
+* Traitement de données
+* Analyse/Apprentissage
+* Data visualisation
+* Requête/Interrogation
+* Workflow
+* Stockage
+* Ordonnancement
+* Sécurité
+* Gouvernance
+* Messages
+
+=== Requête / Interrogation
+
+Pour l'interrogation d'une plateforme Big Data, le pseudo-SQL tente de s'imposer avec des solutions comme :
+
+* Hive
+* Drill
+* Spark SQL
+
+=== Stockage
+
+==== Druid
+
+Druid is a *column-oriented*, *open-source*, *distributed data store* written in Java. +
+Druid is designed to quickly *ingest massive quantities of event data*, and provide low-latency queries on top of the data.+
+The name Druid comes from the shapeshifting Druid class in many role-playing games, to reflect the fact that the architecture of the system can shift to solve different types of data problems.
+
+*Druid is commonly used in business intelligence/<<b-OLAP, OLAP>> applications to analyze high volumes of real-time and historical data*. +
+Druid is used in production by technology companies such as *Alibaba, Airbnb, Cisco, eBay, Netflix, Paypal, and Yahoo*.
+
+Voir :
+
+* https://en.wikipedia.org/wiki/Druid_(open-source_data_store)
+
+== Hadoop
+
+L’architecture est de type *_Share nothing_* : aucune donnée n’est traitée par deux nœuds différents, même si les données sont réparties sur plusieurs noeuds (principe d’un noeud primaire et de noeuds secondaires).
+
+La stack *Hadoop* est composée de 4 éléments :
+
+* *Hadoop Common* : ensemble d’utilitaires utilisés par les autres briques Hadoop.
+* *Hadoop Distributed File System (HDFS)* : un système de fichiers distribué pour le stockage persistant des données.
+* *Hadoop YARN* : un framework de gestion des ressources et de planification des traitements.
+* *Hadoop MapReduce v2* : Un framework de traitements distribués basé sur YARN.
+
+
+
+== A retenir
+
+IMPORTANT: Importance capitale de la *Dataviz* (visualisation des données)
+
+== Ressources
+
+* http://blog.ippon.fr/2016/03/31/big-data-panorama-des-solutions-2016/ : *TRES bonne ressource*, un résumé complet de l'état de l'art.
+* https://hadoopecosystemtable.github.io/ : la table de l'éco-système Hadoop. Liste un grand nombre de technologies, avec un bon abstract pour chacune d'elles. +
+Document de référence à garder sous le coude.
+
+[glossary]
+=== Glossaire
+
+[glossary]
+[[b-OLAP]]OLAP:: Online analytical processing
+
