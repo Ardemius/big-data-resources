@@ -1,7 +1,9 @@
 = Big Data 2017 overview
 Thomas SCHWENDER <https://github.com/ardemius[@ardemius]>
 :icons: font
+:imagesdir: images
 :source-highlighter: highlightjs
+// Next 2 ones are to handle line breaks in some particular elements (list, footnotes, etc.)
 :lb: pass:[<br> +]
 :sb: pass:[<br>]
 // check https://github.com/Ardemius/personal-wiki/wiki/AsciiDoctor-tips for tips on table of content in GitHub
@@ -11,20 +13,42 @@ toc::[]
 
 == Constat sur la mise en place du Big Data en 2017
 
-Début 2017, le Big Data semble encore réservé aux seules grandes entreprises, les autres n'arrivant pas à franchir une série d'obstacles dont les suivants :
+Début 2017, le Big Data semble encore réservé aux seules *grandes entreprises*, les autres n'arrivant pas à franchir une série d'obstacles dont les suivants :
 
-* coût matériel et logiciel
-* coût d'acquisation des données
-* manque de compétences (problématique de recrutement)
-* manque de visualisation des opportunités. +
-La conséquence d'un manque d'expertise, ce qui revient au point précédent.
-* le ROI des investissements Big Data n'a pas été estimé (ils n'ont pas été pondérés par les gains attendus)
-* la collecte de données est limitée aux canaux traditionnels.
-* les données sont non structurées (et on ne sait pas les traiter)
+. *complexité technique* et *manque de compétences*. +
+Les technologies Big Data restant relativement "jeunes", il y a une vraie problématique de recrutement et de formation sur ce dernier point.
+* *la collecte des données reste problématique*. +
+Une collecte de données efficace nécessite généralement de revoir les canaux de collecte en place. +
+Il y a également une problématique de traitement de ces données, généralement *non structurées*.
+* *coût matériel et logiciel*. +
+De nouvelles briques techniques vont devoir être ajoutées au SI. +
+* *manque de visualisation des opportunités*. +
+La conséquence d'un manque d'expertise, ce qui revient au point précédent. +
+Au delà du "Buzz" du Big Data, il n'est pas forcément évident de savoir quand le préférer à des solutions plus classiques (datawarehouse, SGBD, etc.) 
+* *le ROI des investissements Big Data n'a pas été estimé*. +
+Pas encore assez de feedback sur les gains obtenus suite à ces investissements.
 
 On en conclut que l'*exploitation de la data* a un coût de mise en place engendrant une *dette initiale*. +
 Il est donc important de *commencer par de petits projets*, afin de limiter les investissements et de valider la solution, avant de penser à la généraliser à tout le SI. +
 Dans le même esprit, il est important de choisir une *architecture évolutive*, que l'on adaptera aux nouveaux besoins, plutôt qu'une architecture complexe dès le départ.
+
+== Une rapide définition du Big Data
+
+Par *Big Data*, on entend la production *massive* et *hétérogène* de données numériques par les entreprises et les particuliers, dont les caractéristiques (très grand volume, diversité de forme, vitesse attendue de traitement) requièrent de nouveaux moyens de stockage et d'analyse.
+
+Par les "nouvelles" sources de données, on peut citer :
+
+* smartpohnes, tablettes et ordinateurs
+* objets connectés et IoT. +
+Grosse explosion au niveau des données remontées par toutes les familles de capteurs (plusieurs dizaines de milliers pour un appareil de type Airbus)
+* les données rendues accessibles par l'Etat, les établissements publics et les collectivités dans le cadre de l'*Open Data*.
+
+Parmi les domaines d'applications, on peut citer :
+
+* *la santé* : le Big Data favorise une médecine prédictive et personnalisée. +
+On peut envisager un futur (proche) où les appareils connectés devraient permettre l'analyse en continu des données biométriques des patients.
+* *les transports* : modélisation des déplacements de populations afin d'adapter les services et infrastructures.
+* *la finance de marché* : où le *Machine Learning* est de plus en plus utilisé dans le cadre de la prévision de l'évolution des marchés.
 
 == 3 grandes types de traitement des données
 
@@ -45,6 +69,8 @@ System for bulk data transfer between HDFS and structured datastores as RDBMS. L
 ____
 * *Résultats* : les résultats ne seront disponibles qu’à la fin des traitements.
 * *Latence* : souvent de [red]*l’ordre de la minute, voire dans certains cas de l’heure*.
+
+image::bigdata-batch.png[]
 
 ==== Exemples d’implémentation
 
@@ -77,6 +103,8 @@ Les traitements vont analyser les données au fur et à mesure de leur disponibi
 * *Résultats* : les résultats sont disponibles au fur et à mesure.
 * *Latence* : parfois [red]*inférieur à la seconde*.
 
+image::bigdata-realtime.png[]
+
 ==== Exemples d’implémentation
 
 * *Flink*
@@ -84,13 +112,7 @@ Les traitements vont analyser les données au fur et à mesure de leur disponibi
 ____
 *Apache Flink* (formerly called Stratosphere) features powerful programming abstractions in Java and Scala, a high-performance runtime, and automatic program optimization. It has *native support for iterations, incremental iterations, and programs consisting of large DAGs of operations*. +
 Flink is a *data processing system* and an *alternative to Hadoop's MapReduce* component. *It comes with its own runtime, rather than building on top of MapReduce*. As such, it *can work completely independently of the Hadoop ecosystem*. +
-However, Flink can also access Hadoop's distributed file system (HDFS) to read and write data, and Hadoop's next-generation resource manager (YARN footnoteref:[YARN, 
-	YARN stands for _"Yet-Another-Resource-Negotiator"_. It is a new framework that facilitates *writing arbitrary distributed processing frameworks and applications*. 
-	{sb}
-	YARN’s execution model is more generic than the earlier MapReduce implementation. YARN can run applications that do not follow the MapReduce model, unlike the original Apache Hadoop MapReduce (also called MR1). 
-	{sb}
-	Hadoop YARN is an attempt to take Apache Hadoop beyond MapReduce for data-processing.]
-) to provision cluster resources. Since most Flink users are using Hadoop HDFS to store their data, it ships already the required libraries to access HDFS.
+However, Flink can also access Hadoop's distributed file system (HDFS) to read and write data, and Hadoop's next-generation resource manager (<<b-YARN, YARN>>) to provision cluster resources. Since most Flink users are using Hadoop HDFS to store their data, it ships already the required libraries to access HDFS.
 ____
 +
 Voir :
@@ -137,13 +159,20 @@ Voir :
 	** http://storm-project.net/[Storm project]
 	** https://hadoopecosystemtable.github.io/github.com/yahoo/storm-yarn[Storm-on-Yarn]
 
+=== En conclusion
+
+Il n'y a *pas de façon de faire unique répondant* à tous les problèmes. +
+Il est capital de bien définir ses besoins (surtout en termes de latence) afin de choisir les bonnes briques techniques.
+
+Afin d'améliorer les performances (et se rapprocher le plus possible du temps réel), les nouveaux frameworks permettent de plus en plus de définir des [red]*fenêtres de traitement* (*windowing*), et proposent des [red]*traitements itératifs*.
+
 == Catégories des composants du Big Data
 
-* Ingestion/Extraction de données
+* Ingestion / Extraction de données
 * Traitement de données
-* Analyse/Apprentissage
+* Analyse / Apprentissage
 * Data visualisation
-* Requête/Interrogation
+* Requête / Interrogation
 * Workflow
 * Stockage
 * Ordonnancement
@@ -151,12 +180,31 @@ Voir :
 * Gouvernance
 * Messages
 
+image::bigdata-categories.png[]
+
+=== Analyse / Apprentissage
+
+TO BE COMPLETED
+Notebook : Apache Zeppelin
+
+=== Data visualisation
+
+Ce point acquiert une importance d'autant plus capitale qu'il représente l'*interface avec les utilisateurs*.
+
+Les besoins en termes de manipulation des données affichées (filtre, sélection / manipulation de colonnes, charts, etc.) sont tels que de plus en plus de *solutions de BI* (Tableau, MicroStrategy) s'intégrent maintenant aux briques Big Data.
+
+Voir :
+
+* https://www.tableau.com/fr-fr/resource/big-data-analysis[Analyse du Big Data avec Tableau]
+* https://www2.microstrategy.com/producthelp/10.7/WebUser/WebHelp/Lang_1033/Content/mstr_big_data.htm[Analyzing Big Data in MicroStrategy]
+
 === Requête / Interrogation
 
 Pour l'interrogation d'une plateforme Big Data, le pseudo-SQL tente de s'imposer avec des solutions comme :
 
-* Hive
 * Drill
+* Hive
+* Pig
 * Spark SQL
 
 === Stockage
@@ -164,7 +212,7 @@ Pour l'interrogation d'une plateforme Big Data, le pseudo-SQL tente de s'imposer
 ==== Druid
 
 Druid is a *column-oriented*, *open-source*, *distributed data store* written in Java. +
-Druid is designed to quickly *ingest massive quantities of event data*, and provide low-latency queries on top of the data.+
+Druid is designed to quickly *ingest massive quantities of event data*, and provide low-latency queries on top of the data. +
 The name Druid comes from the shapeshifting Druid class in many role-playing games, to reflect the fact that the architecture of the system can shift to solve different types of data problems.
 
 *Druid is commonly used in business intelligence/<<b-OLAP, OLAP>> applications to analyze high volumes of real-time and historical data*. +
@@ -178,28 +226,146 @@ Voir :
 
 L’architecture est de type *_Share nothing_* : aucune donnée n’est traitée par deux nœuds différents, même si les données sont réparties sur plusieurs noeuds (principe d’un noeud primaire et de noeuds secondaires).
 
-La stack *Hadoop* est composée de 4 éléments :
+La stack *Hadoop* (version 2.0, incorporant YARN) est composée de 4 éléments :
 
 * *Hadoop Common* : ensemble d’utilitaires utilisés par les autres briques Hadoop.
 * *Hadoop Distributed File System (HDFS)* : un système de fichiers distribué pour le stockage persistant des données.
 * *Hadoop YARN* : un framework de gestion des ressources et de planification des traitements.
-* *Hadoop MapReduce v2* : Un framework de traitements distribués basé sur YARN.
+* *Hadoop MapReduce _v2_* : Un framework de traitements distribués basé sur YARN.
 
+=== MapReduce
 
+Ce pattern, inventé par Google en 2004, consiste :
 
-== A retenir
+. à partir d'un même vaste ensemble de données,
+. à le diviser en ensembles plus petits
+. puis à traiter chacun de ces nouveaux ensembles en parallèle
 
-IMPORTANT: Importance capitale de la *Dataviz* (visualisation des données)
+image::mapreduce-schema.png[]
+
+=== HDFS
+
+Développé par Hadoop à partir de GoogleFS, ce *système de fichiers distribué* a été conçu pour stocker de très gros volumes de données sur un grand nombre de machines "classiques" (équipées de disques durs banals).
+
+Il repose sur 2 composants principaux :
+
+* le *NameNode* : composant unique (même si backupé par un NameNode secondaire), il centralise la localisation des blocs de données répartis dans le cluster.
+* le *DataNode* : stocke et restitue les blocs de données.
+
+Le NameNode reverra toujours l'adresse du DataNode disposant de la plus grande bande passante. +
+Il réprésente également un *Single Point of Failure* pour HDFS.
+
+Le HDFS stocke les fichiers de grande taille sur plusieurs machines, et la *fiabilité* de la solution est assurée par la *réplication des données* sur plusieurs hôtes (par défaut, réplication sur 3 noeuds : 2 sur le même support, et 1 sur un support différent).
+
+image::HDFS-schema.png[]
+
+=== Data lake
+
+Le cas d'usage courant (début 2017) de la stack Hadoop.
+
+Pour une définition courte, j'aime bien celle-ci provenant de http://www.lemagit.fr/definition/Datalake-lac-de-donnees[_LeMagIT_] :
+
+[quote, LeMagIT]
+____
+Un lac de données (Data Lake) est un référentiel de stockage qui conserve une grande quantité de *données brutes* dans leur format natif jusqu'à ce qu'elles soient nécessaires.
+____
+
+Pour une version plus complète, voici celle de https://en.wikipedia.org/wiki/Data_lake[Wikipedia] :
+
+[quote, Wikipedia]
+____
+A data lake is a method of *storing data* within a system or repository, *in its natural format*, that facilitates the collocation of data in various schemata and structural forms, usually object blobs or files. +
+The idea of data lake is to have a *single store of all data* in the enterprise *ranging from raw data* (which implies exact copy of source system data) *to transformed data* which is used for various tasks including reporting, visualization, analytics and machine learning. +
+The data lake includes structured data from relational databases (rows and columns), semi-structured data (CSV, logs, XML, JSON), unstructured data (emails, documents, PDFs) and even binary data (images, audio, video) thus creating a centralized data store accommodating all forms of data.
+____
+
+Les notions capitales étant :
+
+* *référentiel de stockage* (et, dans l'idéal, *l'unique* référentiel)
+* stockage des données *brutes* (non transformées, conforme à la source)
+
+Voici un schéma illustrant bien *l'architecture globale d'un data lake*, avec les flux associés :
+
+image::datalake-global-schema_hortonworks.jpg[]
+
+*MDM* = Master Data Management (gestion des données de référence)
+
+=== Différences avec un Data warehouse
+
+.Data lake architecture
+[link=https://www.slideshare.net/hortonworks/modern-data-architecture-for-a-data-lake-with-informatica-and-hortonworks-data-platform/15]
+image::datalake-vs-datawarehouse.png[]
+
+Bien retenir la différence entre le _schema-on-write_ du *Data warehouse*, et le _schema-on-read_ du *Data lake*. En voici une bonne explication :
+
+[quote, https://www.sisense.com/blog/demystifying-data-warehouses-data-lakes-data-marts/] 
+____
+Compared to a data warehouse, which uses a “schema on write” approach to hold structured, processed data, a data lake uses a “schema on read” approach in which structure and schema are only applied when the data is being read from the data lake to answer a business intelligence question or for other analytics purposes. In other words, whereas a data warehouse functions via an ETL process (extract, transform, load), a data lake uses ELT (extract, load, and then transform) instead.
+____
+
+== Architecture Lambda
+
+image::lambda-architecture.png[]
+
+image::lambda-architecture-2.png[]
+
+Une architecture Lambda est composée de trois couches :
+
+* *Couche batch (Batch Layer)*
+	** Stocke des données en *format brut*.
+	** Lance périodiquement des traitements massifs afin de produire des *vues consultables* par les utilisateurs. +
+	Ces dernières sont typiquement stockées dans des bases en *lecture seule*, les nouvelles vues logiques précalculées remplaçant les anciennes.
+	** La fréquence des traitements ne doit pas être trop importante afin de minimiser les tâches de fusion des résultats et de constituer les vues.
+* *Couche temps réel (Speed Layer)*
+	** Ne traite que les données récentes (*flux de données en entrée*, [red]*Kafka* est votre ami).
+	** Calcule des *vues incrémentales* qui vont compléter les vues batch afin de fournir des résultats plus récents.
+	** Supprime les vues temps réel obsolètes (postérieures à un traitement batch)
+* *Couche de service (Serving Layer)*
+	** Rend exploitables aux clients les vues créées par les couches batch et temps réel.
+	** Permet également de (re)calculer dynamiquement ces vues.
+
+Briques techniques pouvant être utilisées :
+
+* *Stockage* : NoSQL surtout mais aussi JMS, Kafka, HDFS.
+* *Couche Batch* : Hadoop MapReduce, Spark, Flink, etc.
+* *Couche Temps réel* : Storm, Spark Streaming, Flink, Samza, Tez, etc.
+* *Couche de service* : bases NoSQL, Druid, Cassandra, Hive, HBase, ElasticSearch, etc.
+
+L’architecture Lambda est *générique* mais *complexe à mettre à oeuvre* du fait du grand nombre de briques techniques utilisées.
+
+== Architecture Kappa
+
+image::kappa-architecture.png[]
+
+image::kappa-architecture-2.png[]
+
+Créée par Jay Kreps suite à son expérience chez LinkedIn, il s'agit principalement d'une *simplification* de l'architecture Lambda. +
+De nombreuses solutions de traitement de données étant maintenant capables de gérer des traitements temps réel (streaming) *ET* des traitements batchs, il est donc possible de *fusionner les couches batch et temps réél*.
+
+Une grande *différence avec l'architecture Lambda* est que le système de stockage des données doit être un système de fichiers de type log immuable, tel que [red]*Kafka*.
+
+Kafka permet de conserver les messages pendant *un certain temps* afin de pouvoir les retraiter. +
+l’architecture Kappa ne permet donc *pas* le *stockage permanent* des données, mais est destinée à leur traitement.
 
 == Ressources
 
 * http://blog.ippon.fr/2016/03/31/big-data-panorama-des-solutions-2016/ : *TRES bonne ressource*, un résumé complet de l'état de l'art.
 * https://hadoopecosystemtable.github.io/ : la table de l'éco-système Hadoop. Liste un grand nombre de technologies, avec un bon abstract pour chacune d'elles. +
 Document de référence à garder sous le coude.
+* https://www.sisense.com/blog/demystifying-data-warehouses-data-lakes-data-marts/ : une bonne comparaison en data warehouse et data lake
+* https://big-data.developpez.com/tutoriels/apprendre-faire-choix-architecture-big-data/ : cours très complet sous forme d'article dans Developpez.com
+* https://www.slideshare.net/gschmutz/big-data-and-fast-data-lambda-architecture-in-action : de bons schémas des architectures Lambda et Kappa, avec les technologies associées, même si le document commence à dater (début 2015)
 
 [glossary]
 === Glossaire
 
 [glossary]
 [[b-OLAP]]OLAP:: Online analytical processing
+[[b-MDM]]MDM:: Master Data Management (voir cet http://www.micropole.com/fr-fr/actualites/newsletter-differences/newsletter06/solutions[article de Micropole])
+[[b-YARN]]YARN:: YARN stands for _"Yet-Another-Resource-Negotiator"_. +
+It is a new framework that facilitates *writing arbitrary distributed processing frameworks and applications*. 
++
+YARN’s execution model is more generic than the earlier MapReduce implementation. YARN can run applications that do not follow the MapReduce model, unlike the original Apache Hadoop MapReduce (also called MR1). 
++
+Hadoop YARN is an attempt to take Apache Hadoop beyond MapReduce for data-processing.
 
