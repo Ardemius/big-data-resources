@@ -307,7 +307,7 @@ ____
 
 image::lambda-architecture.png[]
 
-image::lambda-architecture-2.png[]
+image::lambda-architecture-2.jpg[]
 
 Une architecture Lambda est composée de trois couches :
 
@@ -337,7 +337,7 @@ L’architecture Lambda est *générique* mais *complexe à mettre à oeuvre* du
 
 image::kappa-architecture.png[]
 
-image::kappa-architecture-2.png[]
+image::kappa-architecture-2.jpg[]
 
 Créée par Jay Kreps suite à son expérience chez LinkedIn, il s'agit principalement d'une *simplification* de l'architecture Lambda. +
 De nombreuses solutions de traitement de données étant maintenant capables de gérer des traitements temps réel (streaming) *ET* des traitements batchs, il est donc possible de *fusionner les couches batch et temps réél*.
