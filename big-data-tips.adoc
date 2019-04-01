@@ -1,0 +1,10 @@
+= Big Data Tips
+
+== Règle des 3 "10" (ou des 3 "100") pour estimer une volumétrie Data
+
+Avec nombre d'éléments = nb de lignes x nb de colonnes :
+
+* de 10 à 100 millions d'éléments : *Excel ou JSON*
+* de 10 à 100 milliards d'éléments : *BDDR (Postgre / Oracle)*
+* plus de 100 milliards d'éléments : on sort les "vraies" techno "Big Data"
+
