@@ -128,7 +128,7 @@ ____
 +
 Voir :
 +
-	** mon résumé de https://github.com/Ardemius/devoxx-france-2017-presentation/blob/master/jeudi/jeudi_1610-1655_Stream-Processing-avec-Apache-Flink.adoc[Stream Processing avec Apache Flink] (Devoxx France 2017, Tugdual Grall)
+	** mon résumé de https://github.com/Ardemius/meetups-talks-conferences-notes/blob/master/2017-devoxx-france/jeudi/jeudi_1610-1655_Stream-Processing-avec-Apache-Flink.adoc[Stream Processing avec Apache Flink] (Devoxx France 2017, Tugdual Grall)
 	** http://flink.incubator.apache.org/[Apache Flink incubator page]
 	** http://stratosphere.eu/[Stratosphere site]
 +
