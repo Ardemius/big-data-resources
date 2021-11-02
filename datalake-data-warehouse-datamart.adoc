@@ -1,0 +1,145 @@
+= Datalake vs Data warehouse vs Datamart
+Thomas SCHWENDER <https://github.com/ardemius[@ardemius]>
+// Handling GitHub admonition blocks icons
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: images
+:source-highlighter: highlightjs
+// Next 2 ones are to handle line breaks in some particular elements (list, footnotes, etc.)
+:lb: pass:[<br> +]
+:sb: pass:[<br>]
+// check https://github.com/Ardemius/personal-wiki/wiki/AsciiDoctor-tips for tips on table of content in GitHub
+:toc: macro
+:toclevels: 2
+// To turn off figure caption labels and numbers
+//:figure-caption!:
+// Same for examples
+//:example-caption!:
+// To turn off ALL captions
+:caption:
+
+toc::[]
+
+== Notes en mode "agrégation" sur la Data en général
+
+* Très bonne ressource pour une comparaison entre datalake, dwh, datamart, ods : https://www.lemagit.fr/conseil/Entrepot-de-donnees-Data-Lake-Data-Mart-ODS-Que-choisir
+
+    ** *Datalake* : Parce que les données à l'intérieur des *lacs de données* n’ont généralement pas été sélectionnées et peuvent provenir de sources extérieures aux systèmes opérationnels de l'entreprise, ce n'est *pas un bon choix pour l'utilisateur métier moyen qui effectue régulièrement des analyses* ;  les lacs de données sont en revanche *le terrain de jeu des data scientists* et d'autres experts en analyse de données.
+
+* Quand un système, que l'on pense être un data lake, est capable de gérer des requêtes analytiques / BI en plus de ses autres tâches, c'est "plus" qu'un simple data lake. Il expose / génère probablement des datamarts.
+* Dans la même ressource précédente, voir également l'excellent tableau récapitulatif https://media.bitpipe.com/io_10x/io_108885/item_1744173/OuPlacerSesDonnees.pdf[Où placer ses données et pour quels usages ?]
+
+.Schema-on-Read vs. Schema-on-Write (https://data-flair.training/forums/topic/what-is-the-difference-between-schema-on-read-and-schema-on-write/)
+====
+In traditional databases, the table’s schema is imposed during the data load time, if the data being loaded does not conform to the schema then the data load is rejected, this process is know as Schema-on-Write. Here the data is being checked against the schema when written into the database(during data load).
+
+Now in HIVE, the data schema is not verified during the load time, rather it is verified while processing the query. Hence this process in HIVE called Schema-on-Read.
+
+Now, which way is better? Schema-on-Read or Schema-on-Write?
+
+*Schema-on-Read*:
+Schema-on-Read helps in very fast initial data load, since the data does not have to follow any internal schema(internal database format) to read or parse or serialize, as it is just a copy/move of a file.
+This type of movement of data is more flexible incase of huge data or having two schemas for same underlying data.
+
+*Schema-on-Write*:
+Schema-on-Write helps in faster performance of the query, as the data is already loaded in a particular format and it is easy to locate the column index or compress the data. However, it takes longer time to load data into the database.
+
+So, in scenarios of large data load or where the schema is not known at load time and there are no indexes to apply, as the query is not formulated, Schema-on-Read(property of HIVE) is more efficient than Schema-on-write.
+====
+
+* Pour la normalisation et la dénormalisation des données, voir https://stph.scenari-community.org/bdd/0/co/optUC004.html
+* *Normalisation des données* : processus qui permet d'optimiser un modèle logique afin de le *rendre non redondant*. Ce processus conduit à la fragmentation des données dans plusieurs tables.
+    ** bon site sur la normalisation des données et les différentes formes normales : https://www.ionos.fr/digitalguide/hebergement/aspects-techniques/normalisation-base-de-donnees/
+* *Dénormalisation des données* : Processus consistant à regrouper plusieurs tables liées par des références, en une seule table, en réalisant statiquement les opérations de jointure adéquates. +
+L'objectif de la dénormalisation est d'améliorer les performances de la BD en recherche sur les tables considérées, en implémentant les jointures plutôt qu'en les calculant.
+    ** *Quand utiliser la dénormalisation* : Un schéma doit être dénormalisé lorsque les performances de certaines recherches sont insuffisantes et que cette insuffisance à pour cause des jointures.
+
+
+.Problématique du datamart dans le cloud (https://www.lemagit.fr/conseil/Data-Warehouses-comment-evaluer-les-principales-fonctionnalites-des-plateformes)
+====
+Dans le cas d'un data mart au niveau d'un service, le Data warehouse à la demande (DWaaS) mérite également d'être envisagé, d'autant plus si une grande partie des données qui y seront transférées proviennent du Cloud. A l'inverse, si le data mart doit gérer d'importants volumes de données créées ou stockées sur site, leur déplacement vers une plateforme DWaaS peut se révéler problématique.
+
+[...]
+
+De plus, si votre entreprise multiplie les traitements transactionnels dans le Cloud, le DWaaS pourrait être la meilleure solution. Il est logique d'entreposer dans le Cloud les données qui y ont été créées et qui y sont stockées.
+
+[...]
+
+Si votre entrepôt de données doit gérer à la fois des solutions analytique Big Data et d'informatique décisionnelle, tournez-vous vers des approches « polyglottes ». Le terme polyglotte est un emprunt au monde des bases de données NoSQL qui a adopté la persistance polyglotte, ce qui signifie que les données sont stockées dans le type de SGBD qui convient le mieux à l'utilisation prévue.
+====
+
+* *datalake* : stockage objet
+    ** cf notes (voir Google Keep), le coût du stockage object est moindre comparé à celui du stockage BDDR (surtout pour des solutions Cloud ? vérifier ce dernier point)
+
+* *Data warehouse* : cf https://www.lebigdata.fr/datamart-definition (BON SITE), sa définition est "rassembler les données avant de les trier"
+    ** stockage "SQL"
+
+* *datamart* : toujours cf https://www.lebigdata.fr/datamart-definition, "ne contient que le nécessaire"
+
+Voir les ressources suivantes pour une synthèse : 
+
+    * https://www.lebigdata.fr/datamart-definition
+    * https://www.lemagit.fr/definition/Data-warehouse-entrepot-de-donnees
+    * https://www.lemagit.fr/definition/Datamart
+
+
+Pour la partie Cloud : 
+
+    * https://www.lemagit.fr/conseil/Bien-comprendre-les-services-Data-Lake-et-Data-Warehouse-dAWS
+
+.Défense d'Oracle de sa persistance de données qui fait maintenant "mieux que les datalakes" (leur avis)
+====
+* Voir le très bon article d'Oracle https://blogs.oracle.com/bigdata/post/to-data-lake-or-not-to-data-lake, qui est complètement axé "Oracle ce qu'on fait c'est top", MAIS qui est bien écrit avec des arguments
+    ** mais ils t'expliquent "qu'un datalake c'est rarement une bonne solution si tu as Oracle..."
+====
+
+== Focus par technologie
+
+=== Hive vs. HBase - Difference between Hive and HBase
+
+* Hive is query engine that whereas HBase is a data storage particularly for unstructured data.
+* Apache Hive is mainly used for batch processing i.e. OLAP but HBase is extensively used for transactional processing wherein the response time of the query is not highly interactive i.e. OLTP.
+* Unlike Hive, operations in HBase are run in real-time on the database instead of transforming into mapreduce jobs.
+* HBase is to real-time querying and Hive is to analytical queries.
+
+Hive -> high latency
+
+=== Usage of MicroStrategy
+
+* https://www2.microstrategy.com/producthelp/10.7/WebUser/WebHelp/Lang_1033/Content/mstr_big_data.htm :
+	** voir la partie "Connecting and analysing Big Data sources in MicroStrategy", et plus particulièrement :
+		*** interactive queries : solution d'intermédiation pour accéder à la data
+			**** Impala plusieurs fois mis en avant (https://fr.slideshare.net/snehl17/hadoop-integration-with-microstrategy slide 8 / 19) +
+			Apparemment 100x plus rapide que Hive
+		*** NoSQL sources
+
+Jetez un oeil à Microstrategy Hadoop Gateway ? (separate MicroStrategy proprietary installation) +
+-> NON, probablement à ne pas choisir, actuellement l'opération JOIN n'est pas supportée.
+
+* https://fr.slideshare.net/snehl17/hadoop-integration-with-microstrategy
+
+See https://www.dezyre.com/article/hive-vs-hbase-different-technologies-that-work-better-together/322
+
+== DWH on Cloud
+
+* BDH 126 : très bonne talk de Nicolas Korchia, d'Indexima, sur Indexima, Snowflake et les solutions DWH on Cloud des principaux Cloud provider
+
+
+
+
+
+
+
+
+
+
+
+
