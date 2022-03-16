@@ -1,0 +1,110 @@
+= Big Data main roles
+Thomas SCHWENDER <icon:github[] https://github.com/Ardemius/[GitHub] / icon:twitter[role="aqua"] https://twitter.com/thomasschwender[@thomasschwender]>
+// Handling GitHub admonition blocks icons
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: ./images
+:source-highlighter: highlightjs
+:highlightjs-languages: asciidoc
+// We must enable experimental attribute to display Keyboard, button, and menu macros
+:experimental:
+// Next 2 ones are to handle line breaks in some particular elements (list, footnotes, etc.)
+:lb: pass:[<br> +]
+:sb: pass:[<br>]
+// check https://github.com/Ardemius/personal-wiki/wiki/AsciiDoctor-tips for tips on table of content in GitHub
+:toc: macro
+:toclevels: 4
+// To number the sections of the table of contents
+//:sectnums:
+// Add an anchor with hyperlink before the section title
+:sectanchors:
+// To turn off figure caption labels and numbers
+:figure-caption!:
+// Same for examples
+//:example-caption!:
+// To turn off ALL captions
+// :caption:
+
+toc::[]
+
+== The Big Data pipeline
+
+image::big-data-main-roles_01.jpg[]
+
+== Developers
+
+image::big-data-main-roles_04.jpg[width=600]
+
+Le développeur est responsable du *développement* des programmes d'*ingestion* et de *traitement* de la donnée.
+
+Cela inclut :
+
+    * Conception
+    * Développement
+    * Déploiement
+    * Test
+    * Et maintenance du code
+
+Le développeur convertit les données dans des formats pouvant être stockés dans le cluster, puis analysés pour résultat (Dataviz / BI)
+
+Les langages de programmation généralement utilisés sont *Java*, *Scala* et *Python*. +
+Connaître les bases de la *programmation fonctionnelle* est un plus indéniable pour un bon développeur Hadoop.
+
+== Administrator
+
+image::big-data-main-roles_03.jpg[width=600]
+
+L'administrateur Big Data / Hadoop est responsable de l'*installation* et de la *maintenance* des *composants matériels et logiciels* utilisés dans le Big Data pipeline.
+
+
+Cela inclut :
+
+    * Configuration des nodes du cluster 
+    * Gestion des utilisateurs
+    * Gestion de la sécurité
+    * Tests de la performance de la solution (benchmarks)
+    * Mise à jour logicielle
+    * Plan de reprise d'activité
+    * Gestion du stockage *physique* (le matériel, les serveurs) et *logique* (organisation des données en topologies) des données
+
+Il doit avoir de bonnes connaissances en *langages de script*, et connaître les systèmes *Linux*.
+
+== Data architect
+
+image::big-data-main-roles_02.jpg[width=600]
+
+Le Data Architect est responsable de la *définition globale de la solution Big Data* à mettre en place pour répondre aux besoins du projet.
+
+C'est principalement lui qui définit les *blocs logiciels du data pipeline*, et comment ces derniers interagissent (architecture Lambda, architecture Kappa, SMACK)
+
+== Data analyst
+
+image::big-data-main-roles_05.jpg[width=600]
+
+Le Data analyst est responsable de l'*analyse des données*.
+
+Cela inclut :
+
+    * Data mining
+    * Extraction de données
+    * Normalisation
+    * Filtrage
+    * Agrégation
+    * Requêtage
+    * Interprétation
+    * Production de graphiques
+    * Réalisation de prédictions
+
+Ils fournissent les capacités de *Business Intelligence* (BI), et utilisent les outils de visualisation associés (*Tableau*, *PowerBI*, etc.) pour créer *graphiques* et *présentations* permettant d'exposer leurs conclusions / découvertes. 
+
+Le Data analyst connaît bien les langages fonctionnels et de scripting tels que *Python*, *R*, ainsi que le SQL.
+Il a un gros *bagage mathématique* (*statistiques*).
+
