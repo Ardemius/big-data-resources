@@ -48,6 +48,13 @@ Néanmoins, si les systèmes "Big" Data "rendent possible ce qui ne l'était pas
 La "Big" Data ne permet PAS de traiter 20 ans d'historique de données en 1 claquement de doigts, mais elle rend possible la collecte et le traitement de ces 20 ans de données en un certains temps. +
 La "Big" Data va également s'appuyer sur des *statistiques différentielles*, et de plus fortes *capacités prédictives* afin de pouvoir se *projeter dans le futur* (domaine de la *Data Science* et de ses *prédictions*).
 
+Ressources : 
+
+    * *définition Big Data* : https://www.cnil.fr/fr/definition/big-data
+    * *différences Big Data et BI* :
+        ** https://solutions-business-intelligence.fr/quelle-est-la-difference-entre-bi-et-big-data/
+        ** https://www.talend.com/fr/resources/bi-vs-big-data/
+
 == Bonnes pratiques d'architecture Décisionnelle
 
 === Mauvaise pratique : on attaque pas les outils de gestion directement
@@ -78,6 +85,52 @@ Exemple :
 
 .Modélisation en étoile
 image::https://www.cartelis.com/wp-content/uploads/2019/06/modelisation-etoile-achats.png[]
+
+==== Focus sur les différences entre modèle relationnel et modèle en étoile
+
+Comme expliqué plus haut, la plupart des *modèles de données applicatifs* (utilisés par la majorité des outils de gestion) sont des *modèles relationnels normalisés*, à savoir des modèles proches des outils transactionnels et basés sur la notion de dépendance fonctionnelle (entité - relation).
+
+Avantages : 
+
+    * Ces modèles sont conçus et performants pour l'*ajout*, la *mise à jour* et la *suppression* de *petites quantités* de données.
+    * Le requêtage s'effectue de façon presque systématique avec le langage SQL, dont les bases sont connues par la plupart
+
+Inconvénients : 
+
+    * Les informations peuvent être "noyées dans la masse" : beaucoup de tables et beaucoup de relations entre elles
+    * Les entités modélisées ne correspondent pas forcément aux centres d'intérêt des analystes métier (normal, elles ont été initialement conçues pour correspondre à un use case, et non aux besoins des analystes)
+    * Les potentiellement *nombreuses jointures* nécessaires à la récupération / agrégation des données peuvent avoir un *impact fort sur les performances*
+
+De son côté, le *modèle en étoile* est une *modélisation dimensionnelle* devant permettre de dissocier technologie (stack technique) et modélisation, et de structurer l'information en vue de son analyse.
+Cette modélisation est particulièrement bien adaptée aux besoins des systèmes d'information décisionnels qui la choisissent quasi systématiquement.
+
+Cette modélisation contient 2 éléments : 
+
+    * des *tables de faits* : ces dernières contiennent les mesures le long des attributs d'une table de dimensions.
+        ** Ces mesures sont souvent des valeurs numériques pouvant être la cible d'une fonction (la plus courante étant une simple addition)
+    * des *tables de dimensions* : ces dernières contiennent les attributs le long desquels la table de faits calcule la métrique.
+        ** Ces attributs sont souvent des informations de type alphanumérique.
+
+Avantages : 
+
+    * Donne une vision métier de l'information
+    * Facilite la navigation dans le modèle (à des fins exploratoire)
+    * Les jointures étant limitées, les performances sont améliorées
+    * La complexité des requêtes est moindre, comparée à un modèle relationnel, pour l'obtention d'un même résultat (l'accès à la donnée est plus "directe" : table de faits -> dimensions)
+    * La modification du modèle est (plus) aisée (il est facile d'ajouter une nouvelle table de faits ou de dimensions)
+
+Inconvénients : 
+
+    * Contrairement aux données normalisées du modèle relationnel, la duplication de données existe au sein des tables de dimensions.
+    * Ce modèle est avant tout dédié à des use cases d'analyse métier (récupération, "lecture" de données). Il n'est pas adapté à des besoins de mises à jour fréquentes (du fait des données dupliquées)
+    * Son alimentation peut être complexe (car elle est souvent réalisée à partir d'un modèle relationnel, normalisé, correspondant aux outils de gestion en amont. Il faut donc faire rentrer des "ronds dans des carrés").
+
+La *modélisation en étoile* est *recommandée par tous les outils de BI* (PowerBI, Tableau, Qlick Sense, etc.). +
+Les tables de dimensions prennent en charge le filtrage et le regroupement des données, et les tables de faits prennent en charge les opérations / totalisations pouvant apparaître dans le rapport.
+
+Ressources : 
+
+    * Différences entre tables de faits et tables de dimensions : https://fr.gadget-info.com/difference-between-fact-table
 
 == Bonnes pratiques d'architecture Data
 
@@ -338,6 +391,14 @@ Les données ne sont PAS répliquées, ou le sont obligatoirement de manière sy
 On privilégie la fraîcheur et la disponibilité des données aux performances. +
 Ces systèmes ne sont donc pas adaptés à des besoins de temps réel, et l'indisponibilité en cas de crash peut être conséquente.
 
+==== Ressources
+
+* *CAP theorem* :
+    ** https://www.analyticsvidhya.com/blog/2020/08/a-beginners-guide-to-cap-theorem-for-data-engineering/
+    ** https://www.bmc.com/blogs/cap-theorem/
+
+* *transactions ACID* : https://searchsqlserver.techtarget.com/definition/ACID
+
 === Garantie de traitement des messages
 
 Les systèmes de traitements distribués sont souvent répartis en différentes catégories fonction de leurs *garanties de traitement* (ou *garanties de livraison*) des messages :
@@ -566,6 +627,36 @@ Voici quelques pistes pour aiguiller son choix de solution en fonction de la ré
     Ce dernier sera à préférer si les résultats obtenus devront eux-mêmes être manipulés pour donner naissance à de nouveaux résultats (data mining)
     * Pour tout besoin de *calcul prédictif* (Machine Learning, IA, etc.) préférer un *data lake ou un data lakehouse*.
 
+==== Ressources
+
+* *datalake* vs *data warehouse* : https://itrexgroup.com/blog/data-warehouse-vs-data-lake-vs-data-lakehouse-differences-use-cases-tips/
+* *data lakehouse* : 
+    ** https://towardsdatascience.com/a-gentle-introduction-to-data-lakehouse-fc0f131f90ff
+    ** https://www.techtarget.com/searchdatamanagement/definition/data-lakehouse
+
+=== Data Mesh vs Data Fabric
+
+Il s'agit là de concepts récents, et donc de débats récents... +
+Pour une très bonne comparaison des 2, voir https://www.datanami.com/2021/10/25/data-mesh-vs-data-fabric-understanding-the-differences/
+
+* *Data Fabric* : +
+"Conceptually, a big data fabric is essentially a metadata-driven way of connecting a disparate collection of data tools that address key pain points in big data projects in a cohesive and self-service manner. Specifically, data fabric solutions deliver capabilities in the areas of data access, discovery, transformation, integration, security, governance, lineage, and orchestration. Graph is often used to link data assets and users, too."
+
+* *Data Mesh* : +
+"While the *data fabric* seeks to build a single, *virtual management layer* atop distributed data, the *data mesh* encourages *distributed groups of teams to manage data as they see fit*, albeit with some common governance provisions."
+{lb}
+"The core principle driving the data mesh is rectifying the incongruence between the data lake and the data warehouse"
+{lb}
+"data transformation cannot be hardwired into the data by engineers, but instead should be a sort of filter that is applied on a common set of data that’s available to all users. So instead of building a complex set of ETL pipelines to move and transform data to specialized repositories where the various communities can analyze it, the data is retained in roughly its original form, and a series of *domain-specific teams take ownership of that data* as they shape the data into a product."
+
+*Key differences* between Data Fabric and Data Mesh : 
+
+    * A data mesh is basically an API-driven solution for developers, unlike data fabric
+    * Data fabric is the opposite of data mesh, where you’re writing code for the APIs to interface. +
+    On the other hand, data fabric is low-code, no-code, which means that the API integration is happening *inside* of the fabric without actually leveraging it directly, as opposed to data mesh.
+    * A data fabric and a data mesh both provide an architecture to access data across multiple technologies and platforms, but a *data fabric is technology-centric*, while a *data mesh focuses on organizational change*.
+    * A *data mesh* is more about *people and process* than architecture, while a *data fabric* is an *architectural approach* that tackles the complexity of data and metadata in a smart way that works well together.
+
 === Data management
 
 .Data management by Denise Harders
@@ -654,6 +745,14 @@ L'objectif est ici de :
 
 Pour information, une persistance de données dans laquelle ces dernières seraient stockées en garantissant un maximum leur qualité (présence de toutes les informations utiles, que de l'information vérifiée, pas de doublons) répondrait à l'appellation de *Golden Data*.
 
+*Ressources* : 
+
+    * https://www.octopai.com/questions/whats-the-difference-between-master-data-and-metadata
+    * https://www.youtube.com/watch?v=qqNsp1XmdCY : MDM vs MM (très bon, concis mais très clair)
+    * https://www.semarchy.com/blog/backtobasics_data_classification/ : propose une définition de tous les types de données (master data, metadata, golden data, etc.)
+    * master data :
+        ** https://www.youtube.com/watch?v=YmteXRMzzw4 : master data examples
+
 ==== Data warehousing et BI
 
 Cette catégorie regroupe les capacités d'extraction, de nettoyage ("cleansing"), de transformation, de validation, de chargement de la donnée, ainsi que les capacités de d'analyse, de reporting et de dashboarding (data visualization ou "dataviz")
@@ -684,7 +783,20 @@ L'objectif du MM est :
     * *optimiser le requêtage* (les metadata permettant d'orienter la requête)
     * de *faciliter la communication* entre les utilisateurs de la donnée et les équipes IT
     * d'*améliorer les temps de développement* des services / systèmes / applications (les metadata permettant de préciser les données sans le besoin de traitements supplémentaires), et donc le ROI
-    * de *faciliter le respect de la conformité réglementaire* (les metadata permettent de plus facilement vérifier que l'on s'est bien conformé aux exigences du régulateur) +
+    * de *faciliter le respect de la conformité réglementaire* (les metadata permettent de plus facilement vérifier que l'on s'est bien conformé aux exigences du régulateur)
+
+Un shift important ayant lieu depuis peu (mi 2021) : +
+"The paradigm shift: *Going from passive to active metadata*"
+
+    * côté Gartner, cela donne ça : +
+    "Gartner took a huge step toward this by scrapping its Magic Quadrant for Metadata Management Solutions and replacing it with a Market Guide for Active Metadata." +
+    Nous sommes en train de passer à des "*active metadata platforms*".
+    * La raison de cet *échec d'une gestion traditionnelle des metadata* : cette gestion était *passive* (d'où le nouveau nom de l'étude du Gartner : "Market Guide for Active Metadata")
+
+*Ressources* : 
+
+    * L'évolution du metadata management vers une gestion "moins passive plus active" (mi 2021) : https://towardsdatascience.com/the-gartner-magic-quadrant-for-metadata-management-was-just-scrapped-d84b2543f989 : 
+    * Liste des solutions actuelles de *data catalog* (*data discovery*) : https://www.notion.so/atlanhq/The-Ultimate-Repository-of-Data-Discovery-Solutions-149b0ea2a2ed401d84f2b71681c5a369
 
 ==== Data quality
 
@@ -711,12 +823,41 @@ Les objectifs de la data quality visent à :
     * *éviter des pertes financières* dues à des données incorrectes.
     * *éviter la perte d'opportunités* du fait de données ne répondant pas de façon satisfaisante aux besoins.
 
-== Ressources
+Ressources : 
+
+    * *Data quality* : https://www.next-decision.fr/wiki/qu-est-ce-que-la-data-quality
+
+
+=== Ressources
+
+*Data management strategy* :
+
+    * https://itrexgroup.com/blog/data-management-strategy-benefits-principles-steps/
+    * https://www.datasciencecentral.com/reframing-data-management-data-management-2-0/
+
+    * Voir également les publications de la DAMA (Data Management Association) : https://www.dama.org/cpages/home
+        ** Voici un overview de la 2e édition du *DAMA DMBOK2* (Data Management Book Of Knowledge - 2017 - 590 pages) : https://www.dama-dk.org/onewebmedia/DAMA%20DMBOK2_PDF.pdf
+        ** Et voici une très bonne [explication vidéo des Knowledge Areas du DMBOK2 en v1](https://youtu.be/5xw_OjVx5gQ?t=658) (par Denise Harders) +
+            *** Le schéma présenté dans les dernières secondes est également disponible ici : https://www.slideshare.net/DeniseHarders/data-mangement-what-is-it-print-a3-115004805
+        ** Pour rappel, cf Peter Ghavani dans "Big Data Management: Data Governance Principles for Big Data Analytics" : +
+            "The data management DMBOK1 guide was released in 2009, and DMBOK2 in 2011 with an update in 2017 (v2)"
+
+    * Le livre "Big Data Management: Data Governance Principles for Big Data Analytics" (2020/11), de Peter Ghavani, dont l'on peut lire des extraits dans Google Books : https://books.google.fr/books?id=oK4HEAAAQBAJ&pg=PT40 +
+    Plusieurs des sujets traités par ce livre sont très intéressants : *différence entre BI et Analytics*, les 4 couches classiques d'une plateforme analytique (data connection layer, data management layer, analytics layer, presentation layer)
+
+    * Data management - *data architecture* : https://www.redsen-consulting.com/data-analyse/data-management-data-architecture/
+    * Data management - *gouverner les données* : https://www.redsen-consulting.com/data-analyse/data-management-gouverner-les-donnees/
+
+== Ressources full list
 
 * *définition Big Data* : https://www.cnil.fr/fr/definition/big-data
 * *datalake* vs *data warehouse* : https://itrexgroup.com/blog/data-warehouse-vs-data-lake-vs-data-lakehouse-differences-use-cases-tips/
-* *data lakehouse* : https://towardsdatascience.com/a-gentle-introduction-to-data-lakehouse-fc0f131f90ff
+* *data lakehouse* : 
+    ** https://towardsdatascience.com/a-gentle-introduction-to-data-lakehouse-fc0f131f90ff
+    ** https://www.techtarget.com/searchdatamanagement/definition/data-lakehouse
+* *Data Mesh vs Data Fabric* : https://www.datanami.com/2021/10/25/data-mesh-vs-data-fabric-understanding-the-differences/
 * Ippon Big Data 2016 : https://fr.ippon.tech/publications/livre-blanc/explore-big-data
+* *HDFS vs Cloud Object storage, pros and cons* : https://cloud.google.com/blog/products/storage-data-transfer/hdfs-vs-cloud-storage-pros-cons-and-migration-tips
 * *Data management strategy* :
     ** https://itrexgroup.com/blog/data-management-strategy-benefits-principles-steps/
     ** https://www.datasciencecentral.com/reframing-data-management-data-management-2-0/
@@ -737,17 +878,19 @@ Les objectifs de la data quality visent à :
 * *micro-batch* vs *streaming* : https://hazelcast.com/glossary/micro-batch-processing/
     ** streaming with Spark : https://spark.apache.org/docs/latest/streaming-programming-guide.html
 * *modélisation en étoile*, et différence entre *data warehouse* et *datamarts* : https://www.cartelis.com/blog/data-warehouse-modelisation-etoile/
+    ** Différences entre tables de faits et tables de dimensions : https://fr.gadget-info.com/difference-between-fact-table
+    ** Modélisation dimensionnelle (différences entre modèle en étoile et modèle en flocon) : http://formations.imt-atlantique.fr/bi/bi_modelisation_dimensionnelle_introduction.html
 * *garantie de traitement des systèmes distribués* (basé sur kafka, exactly once, at least once, etc.) : https://medium.com/@andy.bryant/processing-guarantees-in-kafka-12dd2e30be0e
 * *master data* vs *metadata* :
     ** https://www.octopai.com/questions/whats-the-difference-between-master-data-and-metadata
     ** https://www.youtube.com/watch?v=qqNsp1XmdCY : MDM vs MM (très bon, concis mais très clair)
-    ** https://www.semarchy.com/blog/backtobasics_data_classification/ : propose une définition de tous les types de données
+    ** https://www.semarchy.com/blog/backtobasics_data_classification/ : propose une définition de tous les types de données (master data, metadata, golden data, etc.)
     ** master data :
         *** https://www.youtube.com/watch?v=YmteXRMzzw4 : master data examples
-    ** metadata : TO BE COMPLETED
 * *CAP theorem* :
     ** https://www.analyticsvidhya.com/blog/2020/08/a-beginners-guide-to-cap-theorem-for-data-engineering/
     ** https://www.bmc.com/blogs/cap-theorem/
+* *transactions ACID* : https://searchsqlserver.techtarget.com/definition/ACID
 * *Policies vs standards vs procedures vs controls* : https://www.complianceforge.com/faq/word-crimes/policy-vs-standard-vs-control-vs-procedure
 * *Data quality* : https://www.next-decision.fr/wiki/qu-est-ce-que-la-data-quality
 
