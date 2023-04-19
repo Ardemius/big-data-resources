@@ -1,4 +1,4 @@
 = Big Data Resources
 
-Un repo visant à centraliser toutes mes ressources sur le thème de la Data
+Un repo visant à centraliser toutes mes ressources sur le thème de la Data : "Big" data, data pipelines, data management, data quality, et autres 😉
 

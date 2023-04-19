@@ -450,7 +450,7 @@ Classiquement, les Data warehouse s'appuient sur une *architecture 3 tiers* :
 
     * *Top tier* : la *couche d'API* et des différents *outils de dataviz* se connectant à la couche Middle.
 
-image::https://itrexgroup.com/wp-content/webpc-passthru.php?src=https://itrexgroup.com/wp-content/uploads/2022/02/data-warehouse-architecture-e1645616859945.png[]
+image::data-warehouse-architecture.png[]
 
 A ces 3 couches, il faut également ajouter 3 composants particulièrement importants dans un DWH :
 
@@ -504,7 +504,7 @@ L'architecture d'un Data lake est quasiment tout le temps séparée en 3 zones :
     * *Sandbox* : cette zone est moins répandue que les 3 dernières, et, comme son nom l'indique, sert pour valider des hypothèses et réaliser des tests. +
     Il est courant qu'elle intègre la zone Gold (étant donné qu'on a le plus souvent besoin de réaliser des tests sur SES données applicatives, donc celles de la zone Gold).
 
-image::https://itrexgroup.com/wp-content/webpc-passthru.php?src=https://itrexgroup.com/wp-content/uploads/2022/02/data-lake-architecture-e1645616900178.png[]
+image::data-lake-architecture.png[]
 
 Si l'on s'en tient strictement aux éléments présentés ci-dessus, un Data lake ne contient pas naturellement de composant permettant des calculs ou un requêtage analytique ou BI. +
 Aussi il est fréquent de le coupler à d'autres outils assurant ces fonctionnalités, comme un Data warehouse, un notebook, un environnement de calculs analytiques (SAS), etc.
@@ -547,7 +547,7 @@ L'architecture d'un Data lakehouse est généralement constituée des éléments
 La différence clé entre une architecture *lakehouse* et une architecture "data lake + data warehouse" repose sur l'*intégration avancée* de ces 2 outils dans le lakehouse, qui *permet d'éviter tout mouvement de la donnée* en son sein (pas besoin de copier la donnée au sein du lakehouse). +
 Cette intégration est rendue possible au travers d'une *gestion poussée des metadata* (Data dictionnaire, Data catalogue), permettant d'*unifier les données* (structurées ET semi-structurées ET non structurées)
 
-image::https://itrexgroup.com/wp-content/webpc-passthru.php?src=https://itrexgroup.com/wp-content/uploads/2022/02/data-lakehouse-architecture-e1645618018984.png[]
+image::data-lakehouse-architecture.png[]
 
 .Un peu d'histoire, d'où vient le terme "Data lakehouse"
 [NOTE]
@@ -779,7 +779,7 @@ A l'heure actuelle où les ces dernières sont *de plus en plus nombreuses* (80 
 L'objectif du Document management est donc :
 
     * de garantir une utilisation efficace des données non structurées, c'est à dire d'être capable d'en *extraire facilement la partie significative*, ayant de la valeur pour le métier de l'entreprise
-    * de faciliter l*'interopérabilité*, l'*usage conjugué* des données structurées, semi-structures ET non structurées (capacité d'intégration dans un même pipeline)
+    * de faciliter l'*interopérabilité*, l'*usage conjugué* des données structurées, semi-structures ET non structurées (capacité d'intégration dans un même pipeline)
 
 ==== Metadata Management (MM)
 
