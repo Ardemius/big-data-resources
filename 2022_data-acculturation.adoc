@@ -55,7 +55,7 @@ Ressources :
         ** https://solutions-business-intelligence.fr/quelle-est-la-difference-entre-bi-et-big-data/
         ** https://www.talend.com/fr/resources/bi-vs-big-data/
 
-== Bonnes pratiques d'architecture Décisionnelle
+== Concepts d'architecture Décisionnelle
 
 === Mauvaise pratique : on attaque pas les outils de gestion directement
 
@@ -132,7 +132,7 @@ Ressources :
 
     * Différences entre tables de faits et tables de dimensions : https://fr.gadget-info.com/difference-between-fact-table
 
-== Bonnes pratiques d'architecture Data
+== Concepts d'architecture Data
 
 === Rapide chronologie de la "Big" Data
 
@@ -529,6 +529,16 @@ Ces Data pipelines permettent de traiter aussi bien des *données extrêmement v
 
 Pour de nombreux besoins métiers, *Data lakes et Data warehouses sont souvent utilisés de concert*, pour stocker sans contrainte les données (Data lake), et permettre leur traitement avec des outils classiques et bien connus de la plupart (Data warehouses).
 
+.Architecture d'un data lake dans le Cloud
+[NOTE]
+====
+Schéma simple et clair d'une *architecture data lake dans le Cloud*, Azure ici : +
+image:cloud-data-lake-architecture-azure.png[]
+
+Cette image provient d'un très bon article de 2020 de Lynn Langit sur la construction de data pipelines pour les charges de travail à échelle génomique (donc très grande échelle) : +
+https://lynnlangit.medium.com/azure-for-genomic-scale-workloads-ad3c989a3d0b
+====
+
 ==== Data lakehouse
 
 Pour rapprocher Data lakes et Data warehouses, et bénéficier de leurs avantages, sans souffrir (ou en souffrant moins) de leurs inconvénients, un nouveau concept est apparu il y a quelques années : le *Data lakehouse*.
@@ -641,7 +651,8 @@ Voici quelques pistes pour aiguiller son choix de solution en fonction de la ré
 
 ==== Ressources
 
-* *datalake* vs *data warehouse* : https://itrexgroup.com/blog/data-warehouse-vs-data-lake-vs-data-lakehouse-differences-use-cases-tips/
+* *data lake* vs *data warehouse* : https://itrexgroup.com/blog/data-warehouse-vs-data-lake-vs-data-lakehouse-differences-use-cases-tips/
+* exemple d'*architecture data lake dans le Cloud* (Azure) : https://lynnlangit.medium.com/azure-for-genomic-scale-workloads-ad3c989a3d0b
 * *data lakehouse* : 
     ** https://towardsdatascience.com/a-gentle-introduction-to-data-lakehouse-fc0f131f90ff
     ** https://www.techtarget.com/searchdatamanagement/definition/data-lakehouse
@@ -863,7 +874,7 @@ Ressources :
 == Ressources full list
 
 * *définition Big Data* : https://www.cnil.fr/fr/definition/big-data
-* *datalake* vs *data warehouse* : https://itrexgroup.com/blog/data-warehouse-vs-data-lake-vs-data-lakehouse-differences-use-cases-tips/
+* *data lake* vs *data warehouse* : https://itrexgroup.com/blog/data-warehouse-vs-data-lake-vs-data-lakehouse-differences-use-cases-tips/
 * *data lakehouse* : 
     ** https://towardsdatascience.com/a-gentle-introduction-to-data-lakehouse-fc0f131f90ff
     ** https://www.techtarget.com/searchdatamanagement/definition/data-lakehouse
