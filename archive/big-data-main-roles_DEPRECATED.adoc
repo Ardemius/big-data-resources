@@ -35,6 +35,8 @@ endif::[]
 
 toc::[]
 
+WARNING: CAREFUL ! OLD CONTENT, NOT UP-TO-DATE ! 
+
 == The Big Data pipeline
 
 image::big-data-main-roles_01.jpg[]

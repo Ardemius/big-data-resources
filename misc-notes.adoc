@@ -1,0 +1,398 @@
+= Misc notes about Data
+Thomas SCHWENDER <icon:github[] https://github.com/Ardemius/[GitHub] / icon:twitter[role="aqua"] https://twitter.com/thomasschwender[@thomasschwender]>
+// Handling GitHub admonition blocks icons
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: ./images
+:resourcesdir: ./resources
+:source-highlighter: highlightjs
+:highlightjs-languages: asciidoc
+// We must enable experimental attribute to display Keyboard, button, and menu macros
+:experimental:
+// Next 2 ones are to handle line breaks in some particular elements (list, footnotes, etc.)
+:lb: pass:[<br> +]
+:sb: pass:[<br>]
+// check https://github.com/Ardemius/personal-wiki/wiki/AsciiDoctor-tips for tips on table of content in GitHub
+:toc: macro
+:toclevels: 4
+// To number the sections of the table of contents
+//:sectnums:
+// Add an anchor with hyperlink before the section title
+:sectanchors:
+// To turn off figure caption labels and numbers
+:figure-caption!:
+// Same for examples
+//:example-caption!:
+// To turn off ALL captions
+// :caption:
+
+toc::[]
+
+Un bloc-notes pour persister toute ma veille techno sur la Data, et servant de base à des articles plus structurés.
+
+== Schema-on-Read vs Schema-on-Write
+
+* 2018/09 : https://data-flair.training/forums/topic/what-is-the-difference-between-schema-on-read-and-schema-on-write/
+
+    ** In traditional databases, the table's schema is imposed during the data load time, if the data being loaded does not conform to the schema then the data load is rejected, this process is know as Schema-on-Write. Here the data is being checked against the schema when written into the database(during data load). +
+    Now in HIVE, the data schema is not verified during the load time, rather it is verified while processing the query. Hence this process in HIVE called Schema-on-Read. +
+    Now, which way is better? Schema-on-Read or Schema-on-Write?
+
+        ** *Schema-on-Read*: +
+        Schema-on-Read helps in very fast initial data load, since the data does not have to follow any internal schema(internal database format) to read or parse or serialize, as it is just a copy/move of a file.
+        This type of movement of data is more flexible incase of huge data or having two schemas for same underlying data.
+
+        ** *Schema-on-Write*: +
+        Schema-on-Write helps in faster performance of the query, as the data is already loaded in a particular format and it is easy to locate the column index or compress the data. However, it takes longer time to load data into the database.
+
+    ** So, in scenarios of large data load or where the schema is not known at load time and there are no indexes to apply, as the query is not formulated, Schema-on-Read(property of HIVE) is more efficient than Schema-on-write.
+
+== Normalisation et dénormalisation des données
+
+* https://stph.scenari-community.org/bdd/0/co/optUC004.html
+
+    ** *Normalisation des données* : processus qui permet d'optimiser un modèle logique afin de le *rendre non redondant*. Ce processus conduit à la fragmentation des données dans plusieurs tables.
+        *** bon site sur la normalisation des données et les *différentes formes normales* : https://www.ionos.fr/digitalguide/hebergement/aspects-techniques/normalisation-base-de-donnees/
+
+    ** *Dénormalisation des données* : Processus consistant à regrouper plusieurs tables liées par des références, en une seule table, en réalisant statiquement les opérations de jointure adéquates. +
+    L'objectif de la dénormalisation est d'améliorer les performances de la BD en recherche sur les tables considérées, en implémentant les jointures plutôt qu'en les calculant.
+        *** *Quand utiliser la dénormalisation* : Un schéma doit être dénormalisé lorsque les performances de certaines recherches sont insuffisantes et que cette insuffisance à pour cause des jointures.
+
+== 2022/10/21 - Demo de Couchbase Capella
+
+J'ai suivi la démo de Couchbase Capella via leur offre d'essai (trial de 30 jours) de la solution.
+
+Vidéo explicative : https://www.youtube.com/watch?v=46715VbaHvk
+
+.Comparaison des concepts entre une BDDR et Couchbase
+[cols="1,1", options="header"] 
+|===
+|Relationel model 			|Couchbase
+|Server	                    |Cluster
+|Database	                |Bucket
+|Schema		                |Scope
+|Table		                |Collection
+|Row		                |Document (JSON or BLOB)
+|===
+
+.Exemple
+image:20221021_couchbase-capella-demo_01.jpg[]
+
+Why the creation of the index is not done automatically ?
+
+    * Because *manipulating the document using only the ID* is *faster* because using internally the *key / value engine*, which *does NOT require any indexes*.
+        ** This works pretty well when you can get the ID of the document
+
+[source,java]
+----
+// guessing the UserHistory ID using the user's id ('123-hist')
+UserHistory hist = userHistoryCollection.get(user.getId() + "-hist")
+----
+
+== 2022/05/12 - Le Comptoir OCTO x Dataiku x Snowflake - Comment créer plus de valeur et développer la collaboration a partir de données enrichies ?
+
+https://fr.slideshare.net/OCTOTechnology/le-comptoir-octo-x-dataiku-x-snowflake-comment-crer-plus-de-valeur-et-developper-la-collaboration-a-partir-de-donnes-enrichies/OCTOTechnology/le-comptoir-octo-x-dataiku-x-snowflake-comment-crer-plus-de-valeur-et-developper-la-collaboration-a-partir-de-donnes-enrichies
+
+* Présentation d'une architecture de solution basée sur Snowflake et Dataïku, avec le soutien d'OCTO Technology
+
+== 2023/01/09 - Rapport tendances 2023 par Didier Girard, section Data
+
+* https://www.linkedin.com/pulse/rapport-tendances-2023-didier-girard : section Data de l'article
+
+* Un des enjeux majeurs de 2023 est de maîtriser le *management* et la *gouvernance de la data*
+
+* Rôles de la Data : 
+
+    ** *Gouvernance et usage de la donnée* : 
+
+        *** *CDO* : +
+        Il doit construire une gouvernance de la donnée alignée avec la stratégie business de l'entreprise. Ce doit être un manager (ce n'est pas un techos), quelqu'un qui a une vision sur la façon de mettre la donnée au service du business, qui embarquera les équipes, les acculturera, qu'il s'agisse des employés ou de ses pairs de la direction.
+
+        *** *Data Domain Owner* : +
+        Chaque grand domaine de l'entreprise est responsable de ses données. Cela devient même flagrant dès lors qu'on commence à raisonner en termes de *Data Mesh*. +
+        Les patrons des finances, du marketing, etc. sont donc de facto des Data Domain Owners, un rôle qu'ils délèguent à des personnes au sein de leurs équipes. +
+        Ce sont des personnes qui ont une connaissance approfondie de la donnée métier, comprennent les enjeux du data-driven, ou comment et pourquoi il faut partager la donnée pour la valoriser. +
+        Ces personnes doivent décrire les jeux de données au sein des data catalogs, ou encore déterminer qui peut y accéder et sous quelles conditions (dans le cadre d'un framework de partage déterminé par le CDO).
+
+        *** *Data Stewards* : +
+        Les Data Stewards jouent un rôle protéiforme, puisqu'ils aident les autres acteurs à définir les normes et processus de collecte, à s'assurer de la qualité des données, à résoudre certains problèmes… +
+        Ce sont eux aussi qui vont assister les utilisateurs de données pour s'assurer que ces dernières sont bien utilisées de manière appropriée, conformément aux règles de l'entreprise.
+
+    ** *Fabrication et l'exploitation des produits et plateformes Data* : 
+
+        *** *Data architects* : +
+        Ils dessinent les grandes lignes de la plateforme, ses principes directeurs et définissent l'articulation entre les composants. Ils possèdent des connaissances globales sur l'écosystème technique, sont conscients des spécificités techniques et donc des avantages et inconvénients des principaux produits, langages et types d'architecture et peuvent aider à coder si besoin.
+
+        *** *Data engineers* : +
+        Ils définissent, développent, mettent en place et maintiennent les outils et infrastructures permettant l'analyse de la donnée. Spécialisés dans les problématiques de croisement et de gestion des données à large échelle, ce sont eux qui vont implémenter les idées des Data Analysts.
+
+        *** *Data scientists* : +
+        Les Data Scientists construisent des modèles mathématiques de machine learning pour répondre à des problématiques métier. Dans la majorité des cas, ils s'appuieront sur des modèles existants qu'ils personnaliseront pour répondre à des enjeux opérationnels. +
+        Mais surtout, le rôle des Data Scientists ne s'arrête plus à la mise au point des modèles ; désormais, ils travaillent conjointement avec les ML Engineers pour s'assurer que leur modèle produise des résultats cohérents et pertinents tout au long de leur cycle de vie.
+
+        *** *ML engineer* : +
+        Ils appliquent les principes du DataOps à la data science : industrialisation, fiabilité, observabilité, etc. Ils mettent en place toute l'infrastructure pour que les Data Scientists puissent tester et publier leur modèle de façon automatisée, mais aussi obtenir le feedback nécessaire pour mettre en œuvre de l'amélioration continue. Ce sont eux qui vont mettre les solutions IA à l'échelle et optimiser la performance globale des modèles. De plus en plus, l'aspect IA responsable devrait entrer dans leur champ de préoccupations.
+
+        *** *Data Analysts* (et à terme *TOUS les utilisateurs*) : +
+        Les Data Analysts manipulent la donnée pour en tirer des enseignements clés, afin de résoudre des problèmes ou de prendre des décisions mieux informées. S'il s'agit aujourd'hui de rôles distincts, il est probable qu'on assiste dans le futur, avec l'acculturation de l'ensemble des collaborateurs à la donnée et la mise à disposition d'outils self-service "intelligents" (avec de l'IA pour des requêtes en langage naturel et des analyses poussées), à une disparition de ce terme. On évoquera alors plutôt des centaines de millions de personnes analysant de la donnée dans le cadre de leur travail quotidien, des graphistes, de propriétaires de pizzérias, de chefs de produits...
+
+* *Data mesh* : 
+    ** Data mesh : une architecture particulièrement bien adaptée aux systèmes basés sur les produits
+    ** La notion de "mesh", le maillage, *favorise la création de produits répondant à des besoins spécifiques*. Plutôt que de vouloir centraliser l'ensemble des données, l'approche data mesh laisse les responsables de domaines (Domain Data Owners) gérer leurs données, leur qualité, qui peut y accéder et sous quelles conditions… +
+    Les responsables produits vont créer des produits sur la base de ces données, et pourront être clients des données d'autres domaines. Chaque produit peut évoluer indépendamment en fonction des évolutions des besoins clients et de l'enrichissement de chaque domaine.
+    ** Ce découplage *favorise aussi à son tour les architectures "event-driven"*, les domaines informant le reste du SI d'événements se produisant en leur sein.
+    ** Cette *approche fédérée plutôt que centralisée* donne ainsi plus de latitude - qui ne doit pas être confondue avec de l'anarchie, où chacun ferait ce qu'il souhaite dans son coin. C'est pourquoi il est primordial d'instaurer des règles de gouvernance, de mettre en place les rôles et responsabilités nécessaires, mais aussi une plateforme et un outillage communs qui vont faciliter la création et la maintenance de ces produits data.
+
+* *Data management* : une discipline étroitement liée à l’informatique, qui consiste à mettre en place l’outillage nécessaire pour gérer, sécuriser et partager les données.
+
+* *Data governance* : concerne les hommes et l’usage de la donnée : quels sont les rôles et responsabilités, quelles sont les règles d’accès à la donnée, les contraintes légales et éthiques respecter, pour quels usages…
+    ** Un de ses principaux défis : trouver le bon équilibre entre l'accès et le contrôle des données.
+    ** outils associés : catalogues et dictionnaires de données, outils de lignage et d'audit des données, outils de qualité et de sécurité des données.
+
+* *Le partage de la Data* : 
+    ** La valorisation de la donnée ne sera possible que si les Data Domain Owners jouent le jeu du partage. +
+    Contrairement à l’or noir, *la donnée ne s’épuise pas quand on la consomme*, elle crée de nouvelles données et enrichit à la fois son producteur et son consommateur.
+    ** *Partager la donnée* est la condition sine qua non d’une *stratégie data-driven*.
+
+* *DataOps et MLOps remplacent progressivement Datalabs et Data Factories*
+
+    ** La donnée en tant que terrain de *jeu* et *d’expérimentation* touche à sa *fin*. +
+    La crise économique aidant, il s’agit aujourd’hui d’*industrialiser les projets*, de les déployer à l’échelle et de démontrer la capacité à soutenir des processus business et créer de la valeur.
+    ** *DataOps* et *MLOps* fournissent le guide d’utilisation pour mettre en place du CI/CD, de l’automatisation et de l'observabilité, toutes conditions nécessaires à une *approche industrielle*.
+
+* *FinOps et Data*
+    ** Les projets data ne doivent plus démarrer sans une composante FinOps, de façon à pouvoir attribuer les coûts aux différents domaines métiers.
+    ** La démarche FinOps s’assurera aussi que les bonnes pratiques sont respectées tout au long du projet, par exemple la *mise en place de seuils et de quotas* qui déclencheront des alertes, voire stopperont un service.
+
+* *SQL est le langage universel de la Data*
+    ** Tous les systèmes qui stockent ou exposent de la donnée offrent désormais une prise en charge de SQL
+        *** ce qui permet aux utilisateurs d'écrire des requêtes qui combinent des données provenant de plusieurs sources et d'effectuer des analyses avancées. 
+    ** Les avancées récentes vont jusqu'à l'*intégration de modèles IA et de ML directement dans le langage*.
+
+* *L’ELT détrône l’ETL*
+    ** L’avènement des nouvelles architectures de données privilégie le plus souvent le *chargement des données brutes au sein d’un datalake*. 
+    ** L’étape de transformation est réalisée ensuite, si elle s’avère nécessaire, pour injecter les données au sein du datawarehouse. +
+    De cette façon, les *data scientists auront accès aux données brutes* et, si de nouveaux besoins analytiques émergent, de nouvelles transformations pourront être opérées à partir des données brutes.
+    ** D'où un bouleversement du marché des outils d’ingestion de données et l'apparition d'*outils se consacrant spécifiquement à la transformation*, dont le plus populaire est le *framework dbt*
+
+        *** *dbt* : permet de décrire les transformations de données de façon modulaire, de les tester et de les documenter ; la documentation produite intégrant automatiquement le lignage de la donnée.
+        *** La qualité du code pouvant laisser à désirer, le framework *Dataform* (racheté puis intégré à Google Cloud Platform) a été créé avec pour objectif d'y remédier, MAIS est encore très jeune et doit progresser
+
+IMPORTANT: DANS TOUS LES CAS, *le découplage EL & T paraît maintenant acté*.
+
+* *Data Contracts*
+    ** Autre concept poussé par l’essor du data mesh et des architectures distribuées
+
+    ** Les Data Contracts sont des *accords entre les producteurs de données et les consommateurs de données* qui décrivent les attentes et les exigences en matière de qualité et de cohérence des données.
+        *** Les contrats sont conçus pour résoudre le problème des changements de schéma inattendus, qui peuvent causer des problèmes de qualité des données et perturber les systèmes aval.
+
+* *Les bases orientées documents alliées du "move to cloud"*
+    ** *pas de schéma fixe* pour organiser les données, au lieu de cela stockage dans des documents, à savoir des collections pouvant avoir différentes structures et être facilement modifiées.
+    ** gèrent un large éventail de types de données, notamment des données structurées, semi-structurées et non structurées.
+    ** très *performantes* : capables de traiter de grands volumes de données et des niveaux élevés de débit
+    ** *Hautement disponibles* et peuvent être facilement déployées sur une infrastructure basée sur le cloud
+
+    ** MAIS, PAS adaptées à tous les usages, et nécessitent un état d'esprit et des compétences spécifiques différentes de celles associées aux développements "traditionnels"S
+
+* *"No Backend" et services managés*
+    ** il s’agit de se concentrer sur le fonctionnel, et de laisser le management de la base à un service cloud, qui réalisera la maintenance, la sauvegarde, les montées de version, etc.
+    ** Le moteur PostgreSQL est ainsi proposé par de multiples services, chez les fournisseurs de cloud, mais aussi dans l’open source, avec Supabase, une solution créée comme une alternative à Firebase (Google) et qui monte dans l’écosystème.
+        *** Il s'agit de 2 solutions dites "Backend as a ServiceS"
+
+* *Data Lakehouse, l’autre nom d’une Data Platform*
+    ** Exemples : Databricks, Starburst, Cloudera, Snowflake
+
+* *De la data analytique à la data opérationnelle*
+    ** La capacité à créer des produits avec de la data raffinée commence à sortir du cadre analytique pour revenir dans le cadre opérationnel. 
+    ** Un cas d’usage de plus en plus fréquent concerne les *référentiels clients uniques*, constitués au sein d’une data platform à partir de plusieurs bases clients de différents systèmes opérationnels (CRM, ventes, abonnements, SAV, etc.). +
+    Les données réconciliées, nettoyées, dédoublonnées, peuvent être réinjectées pour venir servir des systèmes opérationnels, sous forme de *produits data* mis à disposition au sein d’un *hub de données*, ou injectées directement dans une application (opération de type *reverse-ETL*).
+
+== 2023/03/30 : Les 3 grands facteurs clés de succès d'une entreprise data driven
+
+* https://www.wenvision.com/les-facteurs-cles-de-succes-dune-entreprise-data-driven/
+
+* L'organisation data par domaine permet de désengorger la gestion des données d'une équipe centralisée et valoriser la connaissance. Elle déplace la responsabilité auprès des domaines ce qui offre en plus d'une expertise technique une expertise métier. La création d'équipes pluridisciplinaires doit favoriser cette innovation. On parle souvent de *Data Mesh*, pour évoquer cette décentralisation des données.
+
+== 2023/04/26 : ma réaction à l'article de Didier Girard "L'IA générative sera au data catalogue ce que Google a été à Yahoo"
+
+L'article de Didier est disponible sur le blog de WEnvision : https://www.wenvision.com/lia-generative-sera-au-data-catalogue-ce-que-google-a-ete-a-yahoo/
+
+Un article très intéressant de Didier, dont je partage pleinement les conclusions, avec beaucoup de curiosité sur l'évolution de ce domaine à (très) court terme 😉 
+
+A l'heure actuelle, la "vraie" "big" data a lieu quand les metadata elles-mêmes doivent être traitées comme de la "big data". +
+Depuis quelques temps, nous sommes passés d'une gestion "passive" des metadata (les plateformes de metadata / data catalog étaient dans l'attente d'une action humaine pour la saisie de metadata et / ou leur catégorisation) à des "active metadata platforms" comme les appelle le Gartner. +
+Ces dernières collectent en continu toutes les metadata qu'elles peuvent trouver sur le SI, d'où une explosion de la volumétrie associée.
+
+Résultat : il devient très difficile (voire impossible) de cataloguer cette dernière en amont de la création / ingestion des metadata. +
+Il nous faut donc un moyen de le faire soit au moment de la création de la metadonnée, soit plus tard, à la demande, au moment ou on a besoin de se servir des metadata. +
+Dans le 1er cas, le problème est de trouver sur quelle base il est possible d'identifier / catégoriser cette metadata ? +
+Fasse à des volumes de metadata très conséquents et très variables, une catégorisation "statique" prédéfinie en amont n'est plus possible ou adéquate, il faut donc se baser sur un ensemble de règles dont le but est d'aboutir par calcul à une catégorisation. +
+Souci : ce "calcul de catégorisation" est seulement valable à un instant "t", car forcément dépendant du volume de meta-donnée. +
+Avec l'avènement des "active metadata", la catégorisation déterminée à un instant "t" ne sera probablement plus correct à un instant "t + x" synonyme d'un pourcentage (conséquent) de metadata supplémentaires. +
+Dès lors, c'est la 2e solution qui paraît la plus pertinente : une catégorisation à la demande.
+
+Et là je rejoins complètement l'avis de Didier, le catalogage "statique" n'est plus possible et doit être remplacé par un moyen efficace d'aboutir à cette catégorisation à la demande : un algorithme rappelant le fonctionnement d'un moteur de recherche. +
+C'est à ce moment qu'on voit l'IA générative entrer en scène.
+
+Les grandes étapes d'évolution des data catalog ont été : 
+
+    * Data Catalog 1.0: la gestion des metadata (identification, catégorisation, etc.) est directement l'affaire des équipes techniques
+    * Data Catalog 2.0: on passe à une gestion pilotée par des équipes dédiées (nos data stewards) en lien étroit avec le métier
+    * Data Catalog 3.0: Devant le nombre toujours croissant de metadata, on donne les moyens à une communauté étendue d'utilisateurs d'analyser les metadata.
+
+Aujourd'hui, nous arrivons à l'aube du Data Catalog "4.0" : les metadata deviennent tout simplement trop nombreuses pour un traitement "humain" ou créé par des humains (les règles changeraient trop vites), nous avons besoin d'une aide, d'une "pré-catégorisation" effectuée par la machine, c'est là que l'IA générative intervient : nous créer / suggérer les catégories les plus pertinentes (entre autres), mais à la demande. +
+Mais est-ce encore un data "catalog" ? Comme le dit Didier, on se trouve davantage face à un "metadata search engine".
+
+Dès lors, la question que je me pose est : comment valider cette catégorisation effectuée à la demande, sachant qu'elle est susceptible de changer très rapidement, avec la prochaine ingestion d'un +x0% de metadata d'un coup (ou plus encore) qui viendra modifier toutes les catégories précédemment calculées par l'algo ? +
+Une interventation de validation serait impossible ou très compliquée car très (trop) limitée dans le temps : valider une catégorisation stable sur 1 mois soit, 1 semaine pourquoi pas, mais si cela doit passer à plusieurs fois par jour ? +
+Dès lors, accepterait-on de croire la catégorisation réalisée par la machine "sur parole", sans contrôle humain ? +
+Contrairement à une "recherche Google classique", qui est avant tout "indicative", les metadata sont à la base de process opérationnels et métier : une information "indicative" n'est pas suffisante, il faut une information "validée". +
+Comment valider cette information, son "sens métier" ? +
+Pourrait-on imaginer des "Tests Unitaires de catégorisation de données" ? Mais, ne connaissant ni le résultat à l'avance (la catégorie !) ni la mécanique de résolution de l'algo, l'écriture de ces derniers me semble difficile.
+
+J'ai hâte de voir comment va évoluer ce milieu dans les mois à venir, et à quoi vont ressembler les prochains data catalog.
+
+== 2023/02/07 - Jordan TIGANI (MotherDuck, l'éditeur de DuckDB) : Big Data is dead
+
+URL de l'article : https://motherduck.com/blog/big-data-is-dead/
+
+* Jordan utilise / cite le comparateur bien connu "DB Engines" pour comparer les perfs de certaines BDDs.
+
+* Customer data sizes followed a power-law distribution. The largest customer had double the storage of the next largest customer, the next largest customer had half of that, etc. So while there were customers with hundreds of petabytes of data, the sizes trailed off very quickly. There were *many thousands of customers* who paid *less than $10 a month for storage*, which is *half a terabyte*. Among customers who were using the service heavily, the *median data storage size* was much less than *100 GB*.
+
+* He (GCP investissor ?) found that the *largest B2B companies* in his portfolio had around *a terabyte of data*, while the *largest B2C companies* had around *10 Terabytes of data*. +
+-> Most, however, had *far less data*.
+
+* *Modern cloud data platforms all separate storage and compute*, which means that customers are not tied to a single form factor. This, more than scale out, is likely the single *most important change in data architectures* in the last 20 years.
+    ** *Instead of "shared nothing" architectures* which are hard to manage in real world conditions, *shared disk architectures* let you grow your storage and your compute independently. +
+    The rise of scalable and reasonably fast object storage like S3 and GCS meant that you could relax a lot of the constraints on how you built a database.
+
+* *The amount of data processed for analytics workloads is almost certainly smaller than you think*. Dashboards, for example, very often are built from aggregated data. People look at the last hour, or the last day, or the last week's worth of data. Smaller tables tend to be queried more frequently, giant tables more selectively.
+
+* A couple of years ago I did an analysis of BigQuery queries, looking at customers spending more than $1000 / year. *90% of queries processed less than 100 MB of data*.
+
+* A huge percentage of the data that gets processed is less than 24 hours old. By the time data gets to be a week old, it is probably 20 times less likely to be queried than from the most recent day.
+
+* One definition of *"Big Data" is "whatever doesn't fit on a single machine*.. By that definition, the number of workloads that qualify has been decreasing every year.
+
+* An alternate definition of *Big Data is "when the cost of keeping data around is less than the cost of figuring out what to throw away."* 
+    ** I like this definition because it encapsulates why people end up with Big Data. It isn't because they need it; they just haven't bothered to delete it. +
+    If you think about many data lakes that organizations collect, they fit this bill entirely: giant, messy swamps where no one really knows what they hold or whether it is safe to clean them up.
+
+* Some questions that you can ask to *figure out if you're a "Big Data One-Percenter"*:
+    ** Are you really generating a huge amount of data?
+    ** If so, do you really need to use a huge amount of data at once?
+    ** If so, is the data really too big to fit on one machine?
+    ** If so, are you sure you're not just a data hoarder?
+    ** If so, are you sure you wouldn't be better off summarizing?
+
+== 2023/01/24 - Ryan BOYD (MotherDuck, l'éditeur de DuckDB) : How to analyse SQLite databases in DuckDB
+
+* https://motherduck.com/blog/analyze-sqlite-databases-duckdb/
+
+* *DuckDB* is often referred to as the *'SQLite for analytics.'* +
+This analogy helps us understand several key properties of DuckDB: 
+    ** it's for analytics (OLAP), 
+    ** it's embeddable, 
+    ** it's lightweight, 
+    ** it's self-contained 
+    ** and it's widely deployed. +
+-> Okay, the latter may not be a given yet for DuckDB, but SQLite says it's likely the most widely used and deployed database engine and, with the rising popularity of analytics, it's quite possible DuckDB will eventually be competitive.
+
+* There are some noticeable differences between SQLite and DuckDB in how data is stored. 
+    ** *SQLite*, as a data store *focused on transactions*, *stores data row-by-row* while *DuckDB*, as a *database engine for analytics*, stores *data by columns*. 
+    ** Additionally, SQLite doesn't strictly enforce types in the data -- this is known as being weakly typed (or flexibly typed).
+
+== 2023/05/11 - Tech Rocks - Modern Data Stack
+
+Animé par : Marie GRAPPE (Choose - Head of Data), Julieu GOULLEY (Fivetran - Senior Solution Architet), Thomas LAPORTE (devoteam - CTO France)
+
+* MDS : Modern Data Stack
+
+image:20230511_tech-rocks_modern-data-stack_01.jpg[]
+
+* Le MDS est une solution Cloud, avec peu de configuration technique et qui ouvre donc la barrière d'entrée pour plus d'utilisateurs.
+* Les caractéristiques clés de la MDS : 
+    ** Cloud-First
+    ** ETL remplacé par une approche ELT
+    ** SQL-based
+    ** Entièrement managé
+        *** l'automatisation de l'accès aux données est un des piliers de la MDS. Vous n'avez plus à créer et manager des pipelines vous-mêmes.
+
+* Thomas LAPORTE : Plutôt qu'une "stack", la MDS est davantage une collection d'outils
+
+* Julien Goulley : "DBT qui est un outil de transformation qui permet d'écrire des modèles en SQL [...]"
+
+Et maintenant un autre article, 2022/07, *critique de la MDS* : https://anaselk.com/p/modern-data-stack-dead/
+
+    * Il en ressort ce schéma, où une approche plus raisonnable que la MDS est proposée (appelée "Postmodern Data Stack" par l'auteur, Lauren Balik) : +
+    image:202207_modern-data-stack-vs-more-reasonable-stack.jpg[]
+
+Pour un autre *recensement des technologies derrière la Modern Data Stack*, voir ce site : https://notion.castordoc.com/modern-data-stack-guide +
+image:20230511_tech-rocks_modern-data-stack_02.jpg[]
+
+== 2023/05/12 - Starburst Academy : The difference between data lakes and data lakehouses
+
+* URL : https://www.youtube.com/watch?v=k1cch-6bZhM
+
+* *Modern data formats* replaced traditional old Hive format. +
+Those new modern data formats : 
+    ** Apache *Iceberg*
+    ** Databricks *Delta Lake*
+    ** Apache *Hudi*
+
+* Hive tables lack ACID compliance and version control -> not the case of those modern data formats
+
+* *Those new data formats are what make a lakehouse a lakehouse*.
+    ** With Hive, we create a data lake
+    ** with those formats, we create a data lakehouse
+
+* Compared to data lake, those new formats handle better performance, data modification and schema evolution
+    ** Ces nouveaux formats permettent des performances proches des data warehouse ou des BDDs, tout en utilisant un stockage objet, comme les data lakes.
+
+* Data lakehouse improves the *reporting structure*.
+    ** data lakes store metadata limited to : location, format, structure BUT they do NOT record a comprehensive end to end record of all changes made to a table.
+    
+    ** On the other side, data *lakehouses* store *large amounts of metadata* painting a *comprehensive picture of the system*, including record by record details of : 
+        *** every modifications
+        *** every updates
+        *** every deletions
+    ** Those metadata are stored in a set of hierarchically structured files : *manifest files*
+        *** Manifest files capture changes in the state of the dataset, providing the ability to record an accurate up-to-date account of the changes occurring in the table at any given time : inserts, deletions, updates, schema migrations, partition updates +
+        image:20230512_starburst-academy_data-lakehouse-modern-data-formats_01.jpg[]
+
+* How Iceberg uses metadata manifest files to create a transactional layer on top of traditional data lake storage : 
+    ** if a change is made TO THE DATA (let's a file persistance in this example) -> a manifest file is created that references a specific section of the data
+    ** multiple manifest files are referenced in a manifest list
+    ** manifest list is contained in a metadata file
+    ** this metadata file is held in the Iceberd catalog
+
+    ** The metadata held in the lakehouse ~ a database transaction log that sits on top of the traditional cloud object storage (this last making up a data lake)
+
+* Collectively *those manifest files create a kind of snapshot*
+    ** Iceberg calls them just that : *Snapshot files*
+    ** Delta lake uses the Delta log in a similar way
+
+    ** These snapshots detailed the points at which the changes are made
+        *** So they can be used to query the database at a particular point in time, facilitate schema and partition evolution, or roll back changes
+
+* Those numerous metadata and their possibilities are what make the differences between data lake and data lakehouse : 
+    ** record level updates
+    ** ACID compliance
+    ** transaction support
+    ** data concurrency support
+
+image:20230512_starburst-academy_data-lakehouse-modern-data-formats_02.jpg[]
+
+
+
+
+

@@ -28,6 +28,8 @@ endif::[]
 
 toc::[]
 
+WARNING: CAREFUL ! OLD CONTENT, NOT UP-TO-DATE ! 
+
 == Notes en mode "agrégation" sur la Data en général
 
 * Très bonne ressource pour une comparaison entre datalake, dwh, datamart, ods : https://www.lemagit.fr/conseil/Entrepot-de-donnees-Data-Lake-Data-Mart-ODS-Que-choisir
@@ -128,9 +130,6 @@ Jetez un oeil à Microstrategy Hadoop Gateway ? (separate MicroStrategy propriet
 
 See https://www.dezyre.com/article/hive-vs-hbase-different-technologies-that-work-better-together/322
 
-== DWH on Cloud
-
-* BDH 126 : très bonne talk de Nicolas Korchia, d'Indexima, sur Indexima, Snowflake et les solutions DWH on Cloud des principaux Cloud provider
 
 
 
