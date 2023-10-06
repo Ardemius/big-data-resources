@@ -392,6 +392,106 @@ Those new modern data formats :
 
 image:20230512_starburst-academy_data-lakehouse-modern-data-formats_02.jpg[]
 
+== 2023/06/20 - DZone - The Great Data Mesh Debate: Will It Sink or Swim?
+
+Très bon article sur le *Data Mesh* 👍 +
+https://dzone.com/articles/the-great-data-mesh-debate-will-it-sink-or-swim
+
+* L'inspiration du Data Mesh : 
+
+    ** Akin to how software engineering teams transitioned from monolithic applications to microservice architectures, *the data mesh represents the data platform equivalent of microservices*. +
+    Drawing *inspiration from Eric Evans' domain-driven design theory*, which advocates for flexible and scalable software development aligning with specific business domains, the data mesh offers a comparable approach.
+
+* Définition du Data Mesh :
+
+    ** Coined by *Zhamak Dehghani*, the former principal consultant at ThoughtWorks, in 2019, *data mesh* presents a novel approach to *managing analytical data through a distributed architecture*. 
+    ** By enabling end-users to *directly access and query data in its original location*, data mesh *eliminates the need for centralization in data lakes or warehouses*. Under this paradigm, *data is treated as a product*, with *ownership vested in the teams* most closely involved in its consumption and understanding.
+
+* Foundations of Data Mesh : 
+
+    ** managing data by domain
+    ** treating data as a product
+    ** enabling self-service data platforms
+    ** implementing federated computational governance
+
+.Gartner Hype Cycle for Data Management, 2022
+[NOTE]
+====
+Cet article s'appuie l'analyse du Data Mesh réalisée dans l'étude Hype Cycle du Gartner pour le Data Management, paru le 2022/06/30. +
+-> Voir la section à suivre pour la partie de l'étude du Gartner associée au Data Mesh.
+
+.Gartner Hype Cycle for Data Management, 2022
+image:20220630_Gartner_Hype-Cycle-for-Data-Management.png[]
+====
+
+.Gartner : l'approche Data Mesh sera obsolète avant le plateau de productivité
+[IMPORTANT]
+====
+Gartner analysts Mark Beyer, Ehtisham Zaidi, and Robert Thanaraj quantified the perceived *benefits of data mesh as low* and noted that its market penetration among the target audience is also relatively low, ranging between 1 to 5 percent. The hype surrounding data mesh arises from claims that it addresses challenges in centralized data warehouses, data lakes, and data hubs.
+====
+
+* However, with the advancement of technologies and solutions supporting centralized data access, *distributed approaches like data mesh are anticipated to lose popularity* within enterprise IT.
+* Malcolm Hawker, former Gartner analyst and current head of data strategy at Profisee, defended Gartner's observation. He clarified that Gartner does not believe data mesh is currently obsolete, but rather, the chart indicates future obsolescence. Hawker expressed Gartner's belief that the *data fabric will emerge as the dominant data management architectural pattern*, eventually rendering data mesh obsolete.
+
+* *Data Mesh* is one of many *attempts at decentralizing data management*. Previous experiences, such as the transition from centralized data warehousing to domain-focused approaches, have faced challenges.
+
+=== 2022/06/30 - Gartner Hype Cycle for Data Management, 2022 - Data Mesh
+
+URL du rapport complet : https://www.gartner.com/doc/reprints?id=1-2B6AXOGW&ct=220920&st=sb
+
+IMPORTANT: Le Gartner a conclu que l'approche *Data Mesh* serait [red]*obsolète avant le plateau de productivité*.
+
+*Data Mesh* + 
+*Analysis By* : Mark Beyer, Ehtisham Zaidi, Robert Thanaraj +
+*Benefit Rating* : Low +
+*Market Penetration* : 1% to 5% of target audience +
+*Maturity* : Embryonic
+
+*Definition* : +
+Data mesh is an access approach based on *data domains* and *distributed data management*. Operational data assets are analyzed for usage patterns and their affinity to each other — defining domains. Domains are combined with business context descriptors to create *data products*. Data products are registered and made available for *reuse relative to business needs*, and are used throughout the organization. *Data governance authority is distributed to business applications*.
+
+*Why This Is Important* : +
+Data mesh represents a potential *alternative* or complement *to centralization-only data management strategies* for analytics and other reuse cases after first data capture in primary enterprise systems. Organizations continuously seek for a means to balance data requirements for repeatability, reusability, governance, authority, provenance and optimized delivery.
+
+IMPORTANT: Data mesh *shifts responsibility* for data governance back to enterprise application designers and users.
+
+*Business Impact* : +
+From a governance and authoritative perspective, data mesh relies upon the business and data domain expertise of subject matter experts (SMEs). SMEs are assumed to exhibit the greatest experience in capturing and using data within their domain of expertise. They are responsible for determining guidance and processes for creating, managing and preventing unnecessary proliferation of the data products.
+
+IMPORTANT: The goal of the mesh is to *provide ready access to data from as close to the source as possible*.
+
+*Drivers* :
+
+    * Mesh asserts it has the potential to decrease time and effort required to enable data reuse throughout an enterprise when it leverages existing assets instead of centralizing the data architecture.
+    * Data mesh hype is due to assertions it remediates difficulties in approaches like centralized data warehouses, data lakes and data hubs.
+    * Data mesh renews a recurring argument that business applications are the most capable of capturing data and therefore render the most authoritative data.
+    * *Delays in data access and utilization* are the *most frequently reported issues* from organizations that are seeking to deploy data for ongoing use cases. The successes of data centralization solutions have all been questioned.
+    * Data mesh emerges as a response to delivery compromises, negotiation, budgets and miscomprehension that are the primary causes for failed, centralized data management implementations. Failures in these areas are primarily the result of poor delivery and implementation. Implementers focusing on technical delivery and perceived failures stem from adjacent data management methodologies that are easily alienated from the broader business domain requirements. The alienation stretches delivery time, increases maintenance requirements and challenges data validity. The current abundance of resources does not alleviate the inevitable resurgence of resource constraints that will take place when fast and agile business application development creates a rapid expansion of data availability in even more disparate forms.
+    * *Data mesh proposes that it is not necessary to duplicate data from multiple source systems*. However, application designs assert degrees of autonomy relative to internal data capture — in some cases this is justified, and in others is overreach. Operational applications are intentionally designed to specifically omit data when it is NOT relevant to supporting the intended business process, leaving data gaps.
+
+*Obstacles* :
+
+    * Data management maturity is required for: data governance at the business domain level, though coordinated with enterprise governance (if it exists); data completeness from sources; application design and deployment; data quality; data provenance; systems architecture; analytics data management.
+    * Data products must be properly designed by subject matter experts (SMEs) as reusable data products that describe business functions and tasks.
+    * *Data products must be able to meet the service level objectives for other groups sharing the data*.
+    * *System design skills* to ensure service levels *may not be present* in the business units.
+    * "Design by committee" experiences or lead designer *arrogance* have inherent risk. SME expertise across multiple use cases for data domains is often multiple individuals.
+    * Inappropriate identification of either data detail or correct integrity for combining them will result in data product proliferation, leading to increased management and maintenance, and eventual collapse of the mesh.
+
+*User Recommendations* : 
+
+    * Assess data products for business domain alignment and demonstrable reduction of level of effort upon delivery. Control data product proliferation by assuring they can be *deconstructed* and *reconstructed*.
+    * Proceed with the assumption that multiple systems may have authority over different attributes within a data domain. Differing detail levels from sources will require resolution. Individual systems will have gaps in the data needed for a data product.
+    * Data product design must address management and governance contention issues within data domains in order to mitigate irresponsible data management emanating from sources.
+    * Leverage colocated data solutions that solve performance and efficiency issues (lakes, warehouses, or hubs).
+    * Leverage existing quality, integration, virtualization or other data management technologies as inputs to the mesh.
+    * Utilize point solution providers to build a data mesh gradually.
+
+*Sample Vendors* : +
+Cinchy; Denodo; Informatica; K2View; Starburst.IO; TIBCO; Zetaris
+
+
+
 
 
 
