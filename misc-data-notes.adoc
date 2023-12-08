@@ -435,7 +435,7 @@ Gartner analysts Mark Beyer, Ehtisham Zaidi, and Robert Thanaraj quantified the 
 
 * *Data Mesh* is one of many *attempts at decentralizing data management*. Previous experiences, such as the transition from centralized data warehousing to domain-focused approaches, have faced challenges.
 
-=== 2022/06/30 - Gartner Hype Cycle for Data Management, 2022 - Data Mesh
+== 2022/06/30 - Gartner Hype Cycle for Data Management, 2022 - Data Mesh
 
 URL du rapport complet : https://www.gartner.com/doc/reprints?id=1-2B6AXOGW&ct=220920&st=sb
 
@@ -490,7 +490,104 @@ IMPORTANT: The goal of the mesh is to *provide ready access to data from as clos
 *Sample Vendors* : +
 Cinchy; Denodo; Informatica; K2View; Starburst.IO; TIBCO; Zetaris
 
+== 2023/09/29 - Préparation état des lieux technologiques
 
+=== La fin du Data Mesh ?
+
+* DATA MESH : De manière générale, les *data mesh* sont des *architectures de données distribuées*, dans lesquelles *les données sont décentralisées* et *gérées par les équipes métier* qui en ont besoin. 
+	** l'approche Data Mesh implique l'usage de *solutions de Data integration* comme Cinchy, Denodo, Informatica, K2View, Starburst.IO, TIBCO : permettent aux entreprises de connecter leurs différentes sources de données et de les mettre à disposition des utilisateurs. Ces solutions sont donc essentielles pour la mise en place d'un data mesh, car elles permettent aux équipes métier de récupérer les données dont elles ont besoin, là où elles se trouvent.
+	** et de *Data Gouvernance* comme Zetaris : permet de garantir que les données sont de qualité et qu'elles sont utilisées de manière responsable.
+
+* DATA FABRIC : Les data fabric, quant à eux, sont des *architectures de données centralisées*, dans lesquelles les données sont stockées et gérées dans une plateforme unique.
+
+	** Donc davantage le *concept de data lake, ou data lakehouse*.
+		*** "Avant" on aurait tout de suite pensé aux Cloud data lakehouse comme Snowflake, Databricks, Big Query (mais PAS Synapses comme vu précédemment), mais maintenant une nouvelle voix semble également être possible, le retour du on-premise avec des solutions comme DuckDB qui rendent possible de traiter avec du SQL des volumes de données importants résidant dans du stockage objets. 
+			**** Et en plus on peut le faire en conservant le contrôle de la souveraineté de nos données sans prendre de risque avec le RGPD.
+		*** Voir la conf de Vincent HEUSCHLING au Voxxed Days Luxembourg de 2023/07 "Pourquoi DuckDB pourrait être le moteur de votre Datalake ?" : https://www.youtube.com/watch?v=HNGm9rE3FCk
+
+* Concernant le Data Mesh, les objectifs, louables étaient les suivants :
+
+	** Data mesh represents a potential *alternative* or complement *to centralization-only data management strategies* for analytics and other reuse cases after first data capture in primary enterprise systems. Organizations continuously seek for a means to balance data requirements for repeatability, reusability, governance, authority, provenance and optimized delivery.
+	** Data mesh *shifts responsibility* for data governance back to enterprise application designers and users.
+	** L'approche Data Mesh a donc été poussée comme étant une solution aux problèmes inhérents aux solutions de centralisation de données de type data warehouse, data lake et data lakehouse.
+
+* MAIS ces objectifs se heurtent à de sérieux obstables : 
+
+	** *Data management maturity* is required for: data governance at the business domain level, though coordinated with enterprise governance (if it exists); data completeness from sources; application design and deployment; data quality; data provenance; systems architecture; analytics data management.
+    ** Data products must be properly designed by subject matter experts (SMEs) as *reusable data products* that describe business functions and tasks.
+    ** *Data products must be able to meet the service level objectives for other groups sharing the data*.
+    ** *System design skills* to ensure service levels *may not be present* in the business units.
+    ** "Design by committee" experiences or lead designer *arrogance* have inherent risk. SME expertise across multiple use cases for data domains is often multiple individuals.
+    ** Inappropriate identification of either data detail or correct integrity for combining them will result in data product proliferation, leading to increased management and maintenance, and eventual collapse of the mesh.
+
+	** En gros, on revient aux "bons vieux problèmes bien connus" des données silotées à droite à gauche : on peut les gérer avec une TRES BONNE organisation, mais dans la pratique, très rares sont les entreprises qui réussissent ce tour de force. +
+	Et ce n'est pas l'ajout d'outils qui va changer ce constat.
+
+Partant de ce constat, les voix doutant de la pertinence de l'approche Data Mesh se font de plus en plus nombreuses. +
+Parmi celles-ci on peut citer le Gartner qui a statué (Gartner Hype Cycle for Data Management, 2022, utiliser l'image dans misc-data-notes.adoc) en 2022 que le Data Mesh serait obsolète avant le plateau de productivité
+
+* Autre article récent en faveur du Data mesh cette fois : https://dzone.com/articles/evolving-data-strategy-at-a-major-canadian-bank
+	** on y trouve un bon schéma de l'ingestion des data, sous forme de data assets, dans le Cloud, puis de leur transformation en data products au sein de ce dernier.
+* Je trouve ce paragraphe très intéressant : +
+"The CIBC data strategy is not a technological shift. It's a transformational shift. When we are thinking about data migration to the cloud, it's not about moving data from one technology to another. It's *not just a lift-and-shift* of the data to the cloud. The *data must be ingested into the right data products* to avoid data duplication and assure data quality. A *data product* representing a certain business area *becomes a single source of these data* to consumers for reporting, analytics, and AI/ML. For example, just one and only one data product will provide customer data to the rest of the organization."
+	** Et c'est un peu tout le problème à mes yeux : les grosses difficultés de l'approche Data Mesh sont avant tout organisationnelle à mes yeux. +
+	Comment définir le "bon" data product, et se mettre tous d'accord pour que seul un soit défini pour un concept donné (customer data dans l'exemple) et devienne la source de vérité pour ce dernier ? (beaucoup de politique à ce niveau)
+* Idem avec cette phrase : "If we are not moving data to *the right data products*, we can't say we are moving data to the data mesh." +
+-> Bien d'accord, c'est toute la difficulté. *Créer le bon data product est le point central, et le principal challenge du data mesh*.
+	** L'article lui-même met bien en avant la difficulté de la chose : "Keep in mind that it's not black-and-white. It could be a complex iterative process, a kind of mix of art and science. The approach might need to be adjusted depending on use cases and data types."
+
+	** On voit bien dans la description de mise en place de l'approche Data Mesh proposée par l'article qu'elle est d'une telle complexité qu'il va être quasi-obligatoire pour la grande majorité des entreprises d'avoir recours à une société de conseil spécialisée.
+		
+Côté Softeam, 2 aspects sont à prendre en compte : 
+
+	* Nos clients vont demander l'approche Data mesh, à nous de former nos consultants pour répondre à leurs besoins
+	* MAIS, il faudra également former ces mêmes consultants aux risques du data mesh et à ses alternatives (lakehouse, data fabric) afin que ces derniers puissent proposer d'autres solutions s'ils constatent en mission un "fail" du data mesh. +
+	-> Notre valeur ajouté sera également là.
+
+=== Les nouveaux formats de la Data (Iceberg, Delta Lake, Hudi)
+
+* Those new modern data formats : 
+    ** Apache *Iceberg*
+		*** Apache Iceberg, the open source high-performance format for huge analytic tables
+		*** https://www.dremio.com/blog/a-hands-on-look-at-the-structure-of-an-apache-iceberg-table/[]
+		*** "Apache Iceberg is a high-performance, open table format for large-scale analytics. It has rapidly gained momentum as the standard for table formats in a data lake architecture. Iceberg brings capabilities such as ACID compliance, full schema evolution (using SQL), partition evolution, time travel, etc., that address some of the key problems within data lakes and enable warehouse-level functionalities. What allows Iceberg to facilitate these capabilities and achieve high performance is the way it is designed. The diagram below illustrates the high-level components that form the Iceberg architecture." +
+		image:20230929_etat-des-lieux-tech_apache-iceberg-table-structure.jpg[]
+    ** Databricks *Delta Lake*
+		** https://docs.databricks.com/en/delta/index.html#:~:text=Delta%20Lake%20is%20open%20source,transactions%20and%20scalable%20metadata%20handling.[]
+		** "Delta Lake is the optimized storage layer that provides the foundation for storing data and tables in the Databricks Lakehouse Platform. +
+		Delta Lake is open source software that extends Parquet data files with a file-based transaction log for ACID transactions and scalable metadata handling."
+    ** Apache *Hudi*
+
+* *Those new open source data formats are what make a lakehouse a lakehouse*.
+    ** With Hive, we create a data lake
+    ** with those formats, we create a data lakehouse
+
+* Hive tables lack ACID compliance and version control -> not the case of those modern data formats
+
+* Compared to data lake, those new formats handle better performance, data modification and schema evolution
+    ** Ces nouveaux formats permettent des *performances proches des data warehouse ou des BDDs*, *tout en utilisant un stockage objet*, comme les data lakes.
+
+* Tous les éditeurs de solutions analytiques (cloud data lakehouse) étudient et maintenant poussent l'adoption de ces formats : Snowflake, Databricks, BigQuery, etc.
+
+* 2022/07/13 : aujourd'hui un Big Query est capable de lire des fichiers parquet dans du storage, et là snowflake est capable de lire des Apache *Iceberg* tables à l'extérieur. Cela va permettre d'unifier l'accès aux données au sein de snowflake sans avoir besoin d'un outil tierce (comme un Trino).
+	** Pour rappel, *Starburst* est une "data lake analytics platform" construite sur *Trino* (anciennement PrestoSQL)
+		*** Et Trino est un moteur d'analyse distribué, open source et SQL, qui permet d'interroger des données provenant de différentes sources, qu'elles soient structurées, non structurées ou semi-structurées.
+
+* Info en passant, la guerre Snowflake vs Databricks continue de faire rage : 
+	** Snowflake est maintenant en train de chercher à concurrencer Databricks sur toute la partie "développeur"
+	** Et Databricks cherche à concurrencer Snowflake sur la BI...
+		*** La force de Databricks reste la partie ML avec Spark, là où Snowflake reste un outil de BI SQL
+
+* Snowflake est très bon dans son format propriétaire, mais vraiment mauvais pour traiter des fichiers Iceberg dans s3 (for querying data outside of their own database)
+	** -> S'ils le font c'est qu'ils ont la pression de concurrents comme Starburst et Databricks qui le font déjà.
+
+* *Pourquoi utiliser ces formats ?*
+
+	** Force d'un format open source comme Iceberg comparé à un format propriétaire comme le format de Snowflake.
+	** A des fins de portabilité : tout le monde souhaite "a single source of truth for data", une *source unique de vérité* pour la Data
+
+.La nouvelle "vraie" Big Data
+NOTE: Plus de 100 To généralement, et c'est quand les metadata deviennent de la Big Data...
 
 
 
